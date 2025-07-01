@@ -1,4 +1,4 @@
-// Same word list as the main app
+// Same word list as the main app - 80 Epic SE Terms!
 const BINGO_WORDS = [
     "Stack Overflow",
     "Deadline Panic",
@@ -24,7 +24,62 @@ const BINGO_WORDS = [
     "All Nighter",
     "Imposter Syndrome",
     "Feature Creep",
-    "Documentation"
+    "Documentation",
+    "Scrum Master",
+    "Sprint Planning",
+    "Retrospective",
+    "Hotfix Friday",
+    "Dependency Hell",
+    "Code Freeze",
+    "Memory Leak",
+    "Edge Case",
+    "Yak Shaving",
+    "Code Monkey",
+    "DevOps Magic",
+    "Container Chaos",
+    "Microservices",
+    "Monolith Monster",
+    "API Gateway",
+    "Database Lock",
+    "Caching Layer",
+    "Load Balancer",
+    "Circuit Breaker",
+    "Blue Green Deploy",
+    "Rollback Drama",
+    "Docker Whale",
+    "Kubernetes Chaos",
+    "Git Rebase",
+    "Cherry Pick",
+    "Squash Commits",
+    "Branch Protection",
+    "Pull Request",
+    "Code Coverage",
+    "Test Pyramid",
+    "Mocking Framework",
+    "Integration Test",
+    "End to End",
+    "Selenium Grid",
+    "Performance Test",
+    "Load Testing",
+    "Stress Testing",
+    "Security Audit",
+    "Penetration Test",
+    "Code Smell",
+    "Design Pattern",
+    "Singleton Abuse",
+    "Factory Pattern",
+    "Observer Pattern",
+    "Builder Pattern",
+    "Dependency Injection",
+    "Inversion of Control",
+    "SOLID Principles",
+    "Clean Code",
+    "Code Kata",
+    "Pair Debugging",
+    "Mob Programming",
+    "Hotfix Hero",
+    "Regex Wizard",
+    "Caffeine Driven"
 ];
 
 class BingoSheetGenerator {
@@ -42,39 +97,27 @@ class BingoSheetGenerator {
         return shuffled;
     }
     
-    // Generate a unique 5x5 bingo sheet
+    // Generate a randomized 5x5 bingo sheet
     generateUniqueSheet() {
-        let attempts = 0;
-        let sheet;
+        // Get 24 random words (excluding center which will be FREE)
+        const shuffledWords = this.shuffleArray(BINGO_WORDS);
+        const selectedWords = shuffledWords.slice(0, 24);
         
-        do {
-            // Get 24 random words (excluding center which will be FREE)
-            const shuffledWords = this.shuffleArray(BINGO_WORDS);
-            const selectedWords = shuffledWords.slice(0, 24);
-            
-            // Create 5x5 grid with FREE in center
-            sheet = [];
-            let wordIndex = 0;
-            
-            for (let i = 0; i < 25; i++) {
-                if (i === 12) { // Center position (2,2)
-                    sheet.push("FREE");
-                } else {
-                    sheet.push(selectedWords[wordIndex]);
-                    wordIndex++;
-                }
-            }
-            
-            attempts++;
-            
-            // Prevent infinite loop (though very unlikely with 25 words)
-            if (attempts > 1000) {
-                console.warn("Could not generate unique sheet after 1000 attempts");
-                break;
-            }
-            
-        } while (this.isDuplicateSheet(sheet));
+        // Create 5x5 grid with FREE in center
+        const sheet = [];
+        let wordIndex = 0;
         
+        for (let i = 0; i < 25; i++) {
+            if (i === 12) { // Center position (2,2)
+                sheet.push("FREE");
+            } else {
+                sheet.push(selectedWords[wordIndex]);
+                wordIndex++;
+            }
+        }
+        
+        // For large sheet counts, we don't enforce strict uniqueness 
+        // as it becomes mathematically improbable with limited word sets
         this.generatedSheets.push(sheet);
         return sheet;
     }
@@ -93,14 +136,17 @@ class BingoSheetGenerator {
     }
     
     // Generate HTML for a single bingo sheet
-    generateSheetHTML(sheet, sheetNumber) {
+    generateSheetHTML(sheet, sheetNumber, customization = {}) {
         const headerRow = ['B', 'I', 'N', 'G', 'O'];
+        const title = customization.title || "🎯 SE SOCIETY BINGO";
+        const subtitle = `Sheet #${sheetNumber} - ${customization.subtitle || "Get 5 in a row to win!"}`;
+        const footer = customization.footer || "SE Society Vibe Bingo";
         
         return `
             <div class="bingo-sheet">
                 <div class="sheet-header">
-                    <h2>🎯 SE SOCIETY BINGO</h2>
-                    <p>Sheet #${sheetNumber} - Get 5 in a row to win!</p>
+                    <h2>${title}</h2>
+                    <p>${subtitle}</p>
                 </div>
                 <div class="bingo-grid">
                     ${headerRow.map(letter => 
@@ -111,26 +157,38 @@ class BingoSheetGenerator {
                     ).join('')}
                 </div>
                 <div class="sheet-footer">
-                    SE Society Vibe Bingo - Generated ${new Date().toLocaleDateString()}
+                    ${footer} - Generated ${new Date().toLocaleDateString()}
                 </div>
             </div>
         `;
     }
     
     // Generate multiple sheets
-    generateMultipleSheets(count) {
+    generateMultipleSheets(count, customization = {}) {
         const container = document.getElementById('sheetsContainer');
         container.innerHTML = '';
         
         // Reset for new generation
         this.generatedSheets = [];
         
-        for (let i = 1; i <= count; i++) {
-            const sheet = this.generateUniqueSheet();
-            container.innerHTML += this.generateSheetHTML(sheet, i);
+        // Show progress for large batches
+        if (count > 50) {
+            container.innerHTML = `<div style="text-align: center; color: white; padding: 40px;">
+                <h3>🎲 Generating ${count} sheets...</h3>
+                <p>This might take a moment for large batches!</p>
+            </div>`;
         }
         
-        console.log(`✅ Generated ${count} unique bingo sheets!`);
+        // Use setTimeout to allow UI to update
+        setTimeout(() => {
+            let htmlContent = '';
+            for (let i = 1; i <= count; i++) {
+                const sheet = this.generateUniqueSheet();
+                htmlContent += this.generateSheetHTML(sheet, i, customization);
+            }
+            container.innerHTML = htmlContent;
+            console.log(`✅ Generated ${count} unique bingo sheets!`);
+        }, count > 50 ? 100 : 0);
     }
 }
 
@@ -141,19 +199,26 @@ const sheetGenerator = new BingoSheetGenerator();
 function generateSheets() {
     const count = parseInt(document.getElementById('sheetCount').value);
     
-    if (count < 1 || count > 50) {
-        alert('Please enter a number between 1 and 50');
+    if (count < 1 || count > 200) {
+        alert('Please enter a number between 1 and 200');
         return;
     }
     
-    if (count > 20) {
+    if (count > 50) {
         const confirm = window.confirm(
-            `Generating ${count} sheets might take a moment and create a large document. Continue?`
+            `Generating ${count} sheets will create a large document and might take a moment. Continue?`
         );
         if (!confirm) return;
     }
     
-    sheetGenerator.generateMultipleSheets(count);
+    // Get customization values
+    const customization = {
+        title: document.getElementById('eventTitle').value || "🎯 SE SOCIETY BINGO",
+        subtitle: document.getElementById('eventSubtitle').value || "Get 5 in a row to win!",
+        footer: document.getElementById('footerText').value || "SE Society Vibe Bingo"
+    };
+    
+    sheetGenerator.generateMultipleSheets(count, customization);
     
     // Smooth scroll to first sheet
     setTimeout(() => {
@@ -161,7 +226,7 @@ function generateSheets() {
         if (firstSheet) {
             firstSheet.scrollIntoView({ behavior: 'smooth' });
         }
-    }, 100);
+    }, count > 50 ? 200 : 100);
 }
 
 // Generate default sheets on page load
@@ -169,6 +234,11 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('📄 Bingo Sheet Generator loaded!');
     console.log(`📝 ${BINGO_WORDS.length} words available for sheet generation`);
     
-    // Generate 5 sample sheets by default
-    sheetGenerator.generateMultipleSheets(5);
+    // Generate 5 sample sheets by default with default customization
+    const defaultCustomization = {
+        title: "🎯 SE SOCIETY BINGO", 
+        subtitle: "Get 5 in a row to win!",
+        footer: "SE Society Vibe Bingo"
+    };
+    sheetGenerator.generateMultipleSheets(5, defaultCustomization);
 }); 

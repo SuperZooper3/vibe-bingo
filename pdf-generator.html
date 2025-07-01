@@ -27,14 +27,38 @@
             margin-bottom: 30px;
         }
         
-        .generate-controls input {
+        .control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 0 20px;
+        }
+        
+        .control-row label {
+            font-weight: 600;
+            min-width: 120px;
+        }
+        
+        .control-row input {
             padding: 10px 15px;
-            margin: 0 10px;
             border: none;
             border-radius: 5px;
             font-size: 1rem;
+            flex: 1;
+            max-width: 300px;
+            margin-left: 15px;
+        }
+        
+        .control-row input[type="number"] {
             width: 80px;
             text-align: center;
+            flex: none;
+        }
+        
+        .button-row {
+            text-align: center;
+            margin-top: 20px;
         }
         
         .generate-btn {
@@ -94,16 +118,17 @@
         .bingo-cell {
             background: white;
             border: 2px solid #dee2e6;
-            padding: 15px 10px;
+            padding: 12px 8px;
             text-align: center;
             font-weight: 600;
-            min-height: 80px;
+            min-height: 85px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             word-wrap: break-word;
             hyphens: auto;
+            line-height: 1.2;
         }
         
         .bingo-cell.header {
@@ -147,23 +172,50 @@
 <body>
     <div class="generator-container">
         <div class="generator-panel">
+            <div style="text-align: left; margin-bottom: 20px;">
+                <button onclick="window.location.href='index.html'" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; padding: 10px 20px; border-radius: 25px; font-weight: 600; cursor: pointer;">
+                    ← Back to Main Game
+                </button>
+            </div>
             <h1 style="text-align: center; margin-bottom: 20px;">📄 Bingo Sheet Generator</h1>
             <p style="text-align: center; margin-bottom: 30px;">Generate unique 5x5 bingo sheets for your participants!</p>
             
             <div class="generate-controls">
-                <label for="sheetCount">Number of sheets:</label>
-                <input type="number" id="sheetCount" value="10" min="1" max="50">
-                <button class="generate-btn" onclick="generateSheets()">🎲 Generate Sheets</button>
-                <button class="generate-btn" onclick="window.print()" style="background: linear-gradient(45deg, #ff6b6b, #ee5a52);">🖨️ Print All</button>
+                <div class="control-row">
+                    <label for="sheetCount">Number of sheets:</label>
+                    <input type="number" id="sheetCount" value="10" min="1" max="200">
+                </div>
+                
+                <div class="control-row">
+                    <label for="eventTitle">Event Title:</label>
+                    <input type="text" id="eventTitle" value="SE Society Vibe Bingo" placeholder="Your Event Name">
+                </div>
+                
+                <div class="control-row">
+                    <label for="eventSubtitle">Subtitle:</label>
+                    <input type="text" id="eventSubtitle" value="Get 5 in a row to win!" placeholder="Event description">
+                </div>
+                
+                <div class="control-row">
+                    <label for="footerText">Footer Text:</label>
+                    <input type="text" id="footerText" value="SE Society Vibe Bingo" placeholder="Footer information">
+                </div>
+                
+                <div class="button-row">
+                    <button class="generate-btn" onclick="generateSheets()">🎲 Generate Sheets</button>
+                    <button class="generate-btn" onclick="window.print()" style="background: linear-gradient(45deg, #ff6b6b, #ee5a52);">🖨️ Print All</button>
+                </div>
             </div>
             
             <div style="text-align: center; color: rgba(255,255,255,0.8);">
                 <p><strong>Instructions:</strong></p>
                 <ul style="list-style: none; padding: 0;">
-                    <li>• Each sheet will have 24 random words + 1 FREE space</li>
+                    <li>• Each sheet will have 24 random words from our 80-word collection + 1 FREE space</li>
                     <li>• Sheets are automatically unique (no duplicates)</li>
+                    <li>• Supports up to 200 sheets for large events</li>
+                    <li>• Customize your event title and text</li>
                     <li>• Center square is always FREE</li>
-                    <li>• Print-friendly layout</li>
+                    <li>• Full-page optimized for printing</li>
                 </ul>
             </div>
         </div>

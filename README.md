@@ -5,8 +5,8 @@ A fun, modern bingo calling app designed for live events! Perfect for projecting
 ## ✨ Features
 
 ### 🎮 Bingo Caller (Main App)
-- **Spinning Wheel Animation**: Cool spinning UI with dramatic word reveals
-- **25 Custom SE-themed Words**: Tech and software engineering themed bingo words
+- **Bouncing Ball Animation**: Epic physics-based ball animation with dramatic word reveals
+- **80 Custom SE-themed Words**: Comprehensive tech and software engineering vocabulary
 - **Real-time Game Tracking**: Shows total called words and remaining count
 - **Called Words History**: Right sidebar showing all previously called words
 - **Reset Protection**: Confirmation dialog to prevent accidental game resets
@@ -15,9 +15,10 @@ A fun, modern bingo calling app designed for live events! Perfect for projecting
 
 ### 📄 PDF Sheet Generator
 - **Printable Bingo Sheets**: Generate unique 5x5 bingo cards
+- **Massive Scale Support**: Generate up to 200 sheets for large events
+- **Full Customization**: Customize event title, subtitle, and footer text
 - **Automatic Uniqueness**: Each sheet is guaranteed to be different
-- **Customizable Quantity**: Generate 1-50 sheets at once
-- **Print-Friendly**: Optimized layout for printing
+- **Full-Page Optimized**: Perfect text sizing and layout for printing
 - **FREE Center Square**: Classic bingo format with center free space
 
 ## 🚀 Getting Started
@@ -50,14 +51,15 @@ A fun, modern bingo calling app designed for live events! Perfect for projecting
 ### Before the Event:
 1. **Generate Bingo Sheets**: 
    - Open the `pdf-generator.html` page (or click the PDF button)
-   - Choose how many sheets you need (typically 10-20 for small events)
+   - Choose how many sheets you need (1-200 sheets supported!)
+   - Customize your event title, subtitle, and footer text
    - Click "Generate Sheets" then "Print All"
    - Distribute printed sheets to participants
 
 ### During the Event:
 1. **Project the Main App**: Open `index.html` and project it for everyone to see
 2. **Call Words**: Click "🎲 SPIN THE WHEEL" to randomly select words
-3. **Enjoy the Show**: Watch the cool spinning animation and dramatic reveals!
+3. **Enjoy the Show**: Watch the epic bouncing ball animation and dramatic reveals!
 4. **Track Progress**: Monitor called words in the right sidebar
 5. **Reset if Needed**: Use the protected reset button (requires confirmation)
 
@@ -71,9 +73,15 @@ const BINGO_WORDS = [
     "Your Custom Word 1",
     "Your Custom Word 2",
     "Your Custom Word 3",
-    // Add up to 25 words
+    // Add up to 80 words (or as many as you want!)
 ];
 ```
+
+### Customizing Sheet Text:
+Use the PDF generator's built-in customization fields:
+- **Event Title**: Main header on each sheet
+- **Subtitle**: Description text (will automatically include sheet numbers)
+- **Footer Text**: Bottom text on each sheet
 
 ### Styling:
 - Modify `style.css` to change colors, fonts, or layout

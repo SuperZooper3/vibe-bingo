@@ -1,4 +1,4 @@
-// SE Society Bingo Words - Feel free to customize these!
+// SE Society Bingo Words - 80 Epic Terms!
 const BINGO_WORDS = [
     "Stack Overflow",
     "Deadline Panic",
@@ -24,7 +24,62 @@ const BINGO_WORDS = [
     "All Nighter",
     "Imposter Syndrome",
     "Feature Creep",
-    "Documentation"
+    "Documentation",
+    "Scrum Master",
+    "Sprint Planning",
+    "Retrospective",
+    "Hotfix Friday",
+    "Dependency Hell",
+    "Code Freeze",
+    "Memory Leak",
+    "Edge Case",
+    "Yak Shaving",
+    "Code Monkey",
+    "DevOps Magic",
+    "Container Chaos",
+    "Microservices",
+    "Monolith Monster",
+    "API Gateway",
+    "Database Lock",
+    "Caching Layer",
+    "Load Balancer",
+    "Circuit Breaker",
+    "Blue Green Deploy",
+    "Rollback Drama",
+    "Docker Whale",
+    "Kubernetes Chaos",
+    "Git Rebase",
+    "Cherry Pick",
+    "Squash Commits",
+    "Branch Protection",
+    "Pull Request",
+    "Code Coverage",
+    "Test Pyramid",
+    "Mocking Framework",
+    "Integration Test",
+    "End to End",
+    "Selenium Grid",
+    "Performance Test",
+    "Load Testing",
+    "Stress Testing",
+    "Security Audit",
+    "Penetration Test",
+    "Code Smell",
+    "Design Pattern",
+    "Singleton Abuse",
+    "Factory Pattern",
+    "Observer Pattern",
+    "Builder Pattern",
+    "Dependency Injection",
+    "Inversion of Control",
+    "SOLID Principles",
+    "Clean Code",
+    "Code Kata",
+    "Pair Debugging",
+    "Mob Programming",
+    "Hotfix Hero",
+    "Regex Wizard",
+    "Caffeine Driven"
 ];
 
 class BingoGame {
@@ -37,6 +92,7 @@ class BingoGame {
         this.initializeElements();
         this.bindEvents();
         this.updateStats();
+        this.setupBallAnimation();
     }
     
     initializeElements() {
@@ -68,8 +124,8 @@ class BingoGame {
         this.spinBtn.disabled = true;
         this.spinBtn.textContent = '🌪️ SPINNING...';
         
-        // Start spinning animation
-        this.spinner.classList.add('spinning');
+        // Start ball animation
+        this.startBallAnimation();
         
         // Show random words during spin
         this.showSpinningWords();
@@ -109,8 +165,8 @@ class BingoGame {
             timestamp: new Date()
         });
         
-        // Stop spinning animation
-        this.spinner.classList.remove('spinning');
+        // Stop ball animation
+        this.stopBallAnimation();
         
         // Dramatic reveal
         this.wordDisplay.textContent = selectedWord.toUpperCase();
@@ -158,6 +214,81 @@ class BingoGame {
     updateStats() {
         this.totalCalled.textContent = this.calledWords.length;
         this.remaining.textContent = this.availableWords.length;
+    }
+    
+    setupBallAnimation() {
+        // Create multiple animated bouncing balls inside spinner
+        this.balls = [];
+        this.ballCount = 5;
+        
+        for (let i = 0; i < this.ballCount; i++) {
+            const ball = document.createElement('div');
+            ball.className = `bouncing-ball ball-${i + 1}`;
+            this.spinner.appendChild(ball);
+            
+            // Each ball has different properties for varied animation
+            const spinnerSize = this.spinner.offsetWidth || 400;
+            const maxPos = spinnerSize - 60; // Account for ball size and borders
+            
+            this.balls.push({
+                element: ball,
+                x: 50 + Math.random() * Math.max(100, maxPos - 100),
+                y: 50 + Math.random() * Math.max(100, maxPos - 100),
+                velocityX: (Math.random() - 0.5) * 8,
+                velocityY: (Math.random() - 0.5) * 8,
+                size: 25
+            });
+        }
+        
+        this.isAnimating = false;
+    }
+    
+    startBallAnimation() {
+        if (this.isAnimating) return;
+        this.isAnimating = true;
+        
+        const animate = () => {
+            this.balls.forEach(ball => {
+                // Update ball position with increased speed
+                ball.x += ball.velocityX;
+                ball.y += ball.velocityY;
+                
+                // Bounce off edges with more dramatic physics
+                const spinnerRect = this.spinner.getBoundingClientRect();
+                const containerSize = Math.min(spinnerRect.width, spinnerRect.height) - 40; // Dynamic size minus padding
+                if (ball.x <= ball.size || ball.x >= containerSize - ball.size) {
+                    ball.velocityX *= -0.95; // Slight energy loss for realism
+                    ball.x = Math.max(ball.size, Math.min(containerSize - ball.size, ball.x));
+                }
+                if (ball.y <= ball.size || ball.y >= containerSize - ball.size) {
+                    ball.velocityY *= -0.95;
+                    ball.y = Math.max(ball.size, Math.min(containerSize - ball.size, ball.y));
+                }
+                
+                // Apply gravity effect
+                ball.velocityY += 0.1;
+                
+                // Apply position
+                ball.element.style.left = `${ball.x - ball.size/2}px`;
+                ball.element.style.top = `${ball.y - ball.size/2}px`;
+                
+                // Add some random motion to keep it interesting
+                if (Math.random() < 0.005) {
+                    ball.velocityX += (Math.random() - 0.5) * 2;
+                    ball.velocityY += (Math.random() - 0.5) * 2;
+                }
+            });
+            
+            if (this.isAnimating) {
+                requestAnimationFrame(animate);
+            }
+        };
+        
+        animate();
+    }
+    
+    stopBallAnimation() {
+        this.isAnimating = false;
     }
     
     showResetConfirm() {
