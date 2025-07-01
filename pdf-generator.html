@@ -180,8 +180,13 @@
                 color: black;
             }
             
-            .generator-panel:first-child {
-                display: none;
+            .generator-panel {
+                display: none !important;
+            }
+            
+            /* Hide the footer message during printing */
+            .generator-container > div:last-child {
+                display: none !important;
             }
             
             .bingo-sheet {
@@ -265,40 +270,32 @@
                 </div>
                 
                 <div class="button-row">
-                    <button class="generate-btn" onclick="generateSheets()">🎲 Generate Sheets</button>
+                    <button class="generate-btn" onclick="generateSheets()">🔄 Regenerate Sheets</button>
                     <button class="generate-btn" onclick="printSheets()" style="background: linear-gradient(45deg, #ff6b6b, #ee5a52);">🖨️ Print All</button>
                 </div>
                 
-                <div style="text-align: center; margin-top: 20px; color: rgba(255,255,255,0.7); font-size: 0.9rem;">
-                    <p><strong>💡 Print Tip:</strong> In your browser's print dialog:</p>
-                    <ul style="list-style: none; padding: 0;">
-                        <li>• Turn OFF "Headers and footers" for clean sheets</li>
-                        <li>• Set margins to "Minimum" for best fit</li>
-                        <li>• Choose "More settings" → uncheck "Headers and footers"</li>
-                    </ul>
+                <div style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-top: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.9rem;">
+                        <div>
+                            <h4 style="margin-bottom: 10px; color: #4ecdc4;">🖨️ Print Settings</h4>
+                            <p style="margin: 5px 0;">Turn OFF headers/footers</p>
+                            <p style="margin: 5px 0;">Set margins to minimum</p>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 10px; color: #4ecdc4;">📋 Sheet Features</h4>
+                            <p style="margin: 5px 0;">24 random words + FREE center</p>
+                            <p style="margin: 5px 0;">Thick borders, name fields</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div style="text-align: center; color: rgba(255,255,255,0.8);">
-                <p><strong>Instructions:</strong></p>
-                <ul style="list-style: none; padding: 0;">
-                    <li>• Each sheet will have 24 random words + 1 FREE space</li>
-                    <li>• Choose between default SE words or your own custom list</li>
-                    <li>• Monochrome black & white design optimized for printing</li>
-                    <li>• Thick borders for clear grid lines</li>
-                    <li>• Name field for participants</li>
-                    <li>• Supports up to 200 sheets for large events</li>
-                    <li>• Customize your event title and text</li>
-                    <li>• Center square is always FREE</li>
-                </ul>
             </div>
         </div>
         
         <div id="sheetsContainer"></div>
         
-        <div style="text-align: center; margin-top: 30px; color: rgba(255,255,255,0.8);">
-            <h2>🎲 Ready to Generate Bingo Sheets!</h2>
-            <p>Choose your settings above and click "Generate Sheets" to create printable bingo cards.</p>
+        <div class="footer-message" style="text-align: center; margin-top: 30px; color: rgba(255,255,255,0.8);">
+            <h2>🎯 Sheets Auto-Generated!</h2>
+            <p>Adjust settings above to automatically update sheets, then click "Print All" when ready.</p>
             <p>📝 <span id="availableWords">80</span> words available for generation!</p>
         </div>
     </div>

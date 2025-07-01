@@ -93,6 +93,7 @@ class BingoGame {
         this.bindEvents();
         this.loadCustomWords();
         this.loadGameState();
+        this.updateHistory(); // Ensure history loads on startup
         this.updateStats();
         this.setupBallAnimation();
         
@@ -334,6 +335,9 @@ class BingoGame {
                     const lastCalled = this.calledWords[this.calledWords.length - 1];
                     this.wordDisplay.textContent = lastCalled.word.toUpperCase();
                     this.spinnerWord.textContent = lastCalled.word.toUpperCase();
+                    
+                    // Hot load the history display
+                    this.updateHistory();
                 }
                 
                 // Update button text

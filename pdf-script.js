@@ -202,6 +202,8 @@ class BingoSheetGenerator {
                 }
                 htmlContent += this.generateSheetHTML(sheet, i, customization);
             }
+            
+            // Only add sheets to container, no extra text
             container.innerHTML = htmlContent;
             console.log(`✅ Generated ${count} unique bingo sheets!`);
         }, count > 50 ? 100 : 0);
@@ -406,6 +408,9 @@ document.addEventListener('DOMContentLoaded', () => {
         customWordsList.addEventListener('input', updateWordCount);
     }
     
+    // Auto-generate when settings change
+    setupAutoGeneration();
+    
     // Load any saved custom words
     loadCustomWords();
     updateAvailableWordCount();
@@ -413,13 +418,48 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize default word count display
     document.getElementById('defaultWordCount').textContent = getDefaultWords().length;
     
-    // Start with empty container - let user generate sheets as needed
-    const container = document.getElementById('sheetsContainer');
-    container.innerHTML = `
-        <div style="text-align: center; color: white; padding: 40px;">
-            <h3>🎲 Ready to Generate Bingo Sheets!</h3>
-            <p>Choose your settings above and click "Generate Sheets" to create printable bingo cards.</p>
-            <p>📝 <span id="currentWordCount">${getDefaultWords().length}</span> words ready for generation!</p>
-        </div>
-    `;
-}); 
+    // Auto-generate initial sheets
+    generateSheets();
+});
+
+function setupAutoGeneration() {
+    // Auto-generate when any setting changes
+    const autoTriggerElements = [
+        'sheetCount',
+        'eventTitle', 
+        'eventSubtitle',
+        'footerText'
+    ];
+    
+    autoTriggerElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('input', () => {
+                // Debounce to avoid too many rapid generations
+                clearTimeout(window.autoGenTimer);
+                window.autoGenTimer = setTimeout(generateSheets, 500);
+            });
+        }
+    });
+    
+    // Auto-generate when word source changes
+    const wordSourceInputs = document.querySelectorAll('input[name="wordSource"]');
+    wordSourceInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            setTimeout(generateSheets, 100); // Small delay for UI update
+        });
+    });
+    
+    // Auto-generate when custom words change
+    const customWordsList = document.getElementById('customWordsList');
+    if (customWordsList) {
+        customWordsList.addEventListener('input', () => {
+            clearTimeout(window.customWordsTimer);
+            window.customWordsTimer = setTimeout(() => {
+                if (document.querySelector('input[name="wordSource"]:checked').value === 'custom') {
+                    generateSheets();
+                }
+            }, 1000); // Longer delay for typing
+        });
+    }
+} 
