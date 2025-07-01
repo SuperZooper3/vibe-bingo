@@ -235,6 +235,17 @@ function generateSheets() {
 
 // Print function with better browser support
 function printSheets() {
+    // Check if there are sheets to print
+    const sheetsContainer = document.getElementById('sheetsContainer');
+    const sheets = sheetsContainer.querySelectorAll('.bingo-sheet');
+    
+    if (sheets.length === 0) {
+        alert('⚠️ No sheets to print! Please generate some sheets first.');
+        return;
+    }
+    
+    console.log(`🖨️ Printing ${sheets.length} sheets...`);
+    
     // Add print-ready class for better styling control
     document.body.classList.add('print-ready');
     
@@ -276,8 +287,9 @@ function printSheets() {
                             print-color-adjust: exact;
                         }
                         .bingo-cell.header, .bingo-cell.free, .sheet-header {
-                            background: #000 !important;
-                            color: white !important;
+                            background: white !important;
+                            color: black !important;
+                            font-weight: bold !important;
                             -webkit-print-color-adjust: exact;
                             print-color-adjust: exact;
                         }
@@ -317,11 +329,13 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('📄 Bingo Sheet Generator loaded!');
     console.log(`📝 ${BINGO_WORDS.length} words available for sheet generation`);
     
-    // Generate 5 sample sheets by default with default customization
-    const defaultCustomization = {
-        title: "🎯 SE SOCIETY BINGO", 
-        subtitle: "Get 5 in a row to win!",
-        footer: "SE Society Vibe Bingo"
-    };
-    sheetGenerator.generateMultipleSheets(5, defaultCustomization);
+    // Start with empty container - let user generate sheets as needed
+    const container = document.getElementById('sheetsContainer');
+    container.innerHTML = `
+        <div style="text-align: center; color: white; padding: 40px;">
+            <h3>🎲 Ready to Generate Bingo Sheets!</h3>
+            <p>Choose your settings above and click "Generate Sheets" to create printable bingo cards.</p>
+            <p>📝 ${BINGO_WORDS.length} SE-themed words available!</p>
+        </div>
+    `;
 }); 

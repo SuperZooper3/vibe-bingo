@@ -40,6 +40,14 @@ body {
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
+.nav-btn:not(:first-child) {
+    margin-left: 10px;
+}
+
+.nav-btn.reset-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+}
+
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -376,23 +384,18 @@ main {
 @keyframes rainbow-explosion {
     0% { 
         background-position: 0% 0%; 
-        transform: rotate(0deg) scale(1);
     }
     25% { 
         background-position: 100% 25%; 
-        transform: rotate(90deg) scale(1.05);
     }
     50% { 
         background-position: 200% 50%; 
-        transform: rotate(180deg) scale(1);
     }
     75% { 
         background-position: 300% 75%; 
-        transform: rotate(270deg) scale(1.05);
     }
     100% { 
         background-position: 400% 100%; 
-        transform: rotate(360deg) scale(1);
     }
 }
 

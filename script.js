@@ -94,6 +94,9 @@ class BingoGame {
         this.loadGameState();
         this.updateStats();
         this.setupBallAnimation();
+        
+        // Bind reset function to global scope for HTML button
+        window.resetGame = () => this.resetGame();
     }
     
     initializeElements() {
@@ -159,6 +162,8 @@ class BingoGame {
         const randomIndex = Math.floor(Math.random() * this.availableWords.length);
         const selectedWord = this.availableWords[randomIndex];
         
+        console.log(`🎲 Selected word: "${selectedWord}" (was ${this.availableWords.length} words available)`);
+        
         // Remove from available words and add to called words
         this.availableWords.splice(randomIndex, 1);
         this.calledWords.push({
@@ -221,11 +226,11 @@ class BingoGame {
     setupBallAnimation() {
         // Create multiple animated bouncing balls inside spinner
         this.balls = [];
-        this.ballCount = 18; // WAY MORE BALLS for maximum excitement!
+        this.ballCount = 8; // Reduced for better visibility and less chaos
         
         for (let i = 0; i < this.ballCount; i++) {
             const ball = document.createElement('div');
-            ball.className = `bouncing-ball ball-${(i % 18) + 1}`; // Cycle through colors
+            ball.className = `bouncing-ball ball-${(i % 8) + 1}`; // Cycle through colors
             this.spinner.appendChild(ball);
             
             // Each ball has different properties for varied animation
@@ -349,6 +354,35 @@ class BingoGame {
             this.wordDisplay.textContent = '🎉 ALL WORDS CALLED! 🎉';
             this.spinnerWord.textContent = 'GAME COMPLETE!';
         }, 1000);
+    }
+    
+    resetGame() {
+        // Confirm reset
+        const confirmed = confirm('🔄 Are you sure you want to reset the game? This will clear all called words and start fresh.');
+        if (!confirmed) return;
+        
+        // Stop any current animations
+        this.stopBallAnimation();
+        this.isSpinning = false;
+        
+        // Reset all game state
+        this.availableWords = [...BINGO_WORDS];
+        this.calledWords = [];
+        this.gameStarted = false;
+        
+        // Reset UI elements
+        this.wordDisplay.textContent = 'Press SPIN or SPACEBAR to start!';
+        this.spinnerWord.textContent = 'READY?';
+        this.spinBtn.disabled = false;
+        this.spinBtn.textContent = '🎲 SPIN (or press SPACE)';
+        this.wordDisplay.classList.remove('revealed');
+        
+        // Update display
+        this.updateHistory();
+        this.updateStats();
+        this.saveGameState();
+        
+        console.log('🔄 Game reset! Ready for a fresh start.');
     }
 }
 
