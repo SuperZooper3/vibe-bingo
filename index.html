@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE Society Vibe Bingo</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 SE Society Vibe Bingo</h1>
+            <p>Epic bingo calling for epic vibes</p>
+        </header>
+
+        <main>
+            <div class="game-area">
+                <div class="spinner-container">
+                    <div class="spinner" id="spinner">
+                        <div class="spinner-word" id="spinnerWord">READY?</div>
+                    </div>
+                    <div class="current-word" id="currentWord">
+                        <div class="word-display" id="wordDisplay">Click SPIN to start!</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="spin-btn" id="spinBtn">🎲 SPIN THE WHEEL</button>
+                    <button class="pdf-btn" onclick="window.open('pdf-generator.html', '_blank')">📄 Generate Bingo Sheets</button>
+                    <div class="reset-area">
+                        <button class="reset-btn" id="resetBtn" disabled>⚠️ Reset Game</button>
+                        <div class="reset-confirm" id="resetConfirm" style="display: none;">
+                            <p>Are you REALLY sure? This will reset the entire game!</p>
+                            <button class="confirm-reset" id="confirmReset">Yes, Reset Everything</button>
+                            <button class="cancel-reset" id="cancelReset">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history-panel">
+                <h3>📋 Called Words</h3>
+                <div class="stats">
+                    <span>Total: <span id="totalCalled">0</span></span>
+                    <span>Remaining: <span id="remaining">25</span></span>
+                </div>
+                <div class="called-words" id="calledWords">
+                    <p class="no-words">No words called yet!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

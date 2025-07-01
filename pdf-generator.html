@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Sheet Generator - SE Society</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .generator-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .generator-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        .generate-controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .generate-controls input {
+            padding: 10px 15px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 80px;
+            text-align: center;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .bingo-sheet {
+            background: white;
+            color: #333;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            page-break-after: always;
+        }
+        
+        .sheet-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .sheet-header h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .sheet-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .bingo-cell {
+            background: white;
+            border: 2px solid #dee2e6;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 600;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        
+        .bingo-cell.header {
+            background: #667eea;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+        
+        .bingo-cell.free {
+            background: #4ecdc4;
+            color: white;
+            font-weight: 800;
+        }
+        
+        .sheet-footer {
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            
+            .generator-panel:first-child {
+                display: none;
+            }
+            
+            .bingo-sheet {
+                box-shadow: none;
+                border: 1px solid #333;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="generator-container">
+        <div class="generator-panel">
+            <h1 style="text-align: center; margin-bottom: 20px;">📄 Bingo Sheet Generator</h1>
+            <p style="text-align: center; margin-bottom: 30px;">Generate unique 5x5 bingo sheets for your participants!</p>
+            
+            <div class="generate-controls">
+                <label for="sheetCount">Number of sheets:</label>
+                <input type="number" id="sheetCount" value="10" min="1" max="50">
+                <button class="generate-btn" onclick="generateSheets()">🎲 Generate Sheets</button>
+                <button class="generate-btn" onclick="window.print()" style="background: linear-gradient(45deg, #ff6b6b, #ee5a52);">🖨️ Print All</button>
+            </div>
+            
+            <div style="text-align: center; color: rgba(255,255,255,0.8);">
+                <p><strong>Instructions:</strong></p>
+                <ul style="list-style: none; padding: 0;">
+                    <li>• Each sheet will have 24 random words + 1 FREE space</li>
+                    <li>• Sheets are automatically unique (no duplicates)</li>
+                    <li>• Center square is always FREE</li>
+                    <li>• Print-friendly layout</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="sheetsContainer"></div>
+    </div>
+
+    <script src="pdf-script.js"></script>
+</body>
+</html> 
