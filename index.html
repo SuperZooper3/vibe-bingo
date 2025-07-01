@@ -8,6 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <button class="nav-btn" onclick="window.open('pdf-generator.html', '_blank')">📄 Generate Bingo Sheets</button>
+    </div>
+
     <div class="container">
         <header>
             <h1>🎯 SE Society Vibe Bingo</h1>
@@ -16,25 +21,16 @@
 
         <main>
             <div class="game-area">
+                <div class="game-top">
+                    <button class="spin-btn" id="spinBtn">🎲 SPIN (or press SPACE)</button>
+                </div>
+                
                 <div class="spinner-container">
                     <div class="spinner" id="spinner">
                         <div class="spinner-word" id="spinnerWord">READY?</div>
                     </div>
                     <div class="current-word" id="currentWord">
-                        <div class="word-display" id="wordDisplay">Click SPIN to start!</div>
-                    </div>
-                </div>
-
-                <div class="controls">
-                    <button class="spin-btn" id="spinBtn">🎲 SPIN THE WHEEL</button>
-                    <button class="pdf-btn" onclick="window.open('pdf-generator.html', '_blank')">📄 Generate Bingo Sheets</button>
-                    <div class="reset-area">
-                        <button class="reset-btn" id="resetBtn" disabled>⚠️ Reset Game</button>
-                        <div class="reset-confirm" id="resetConfirm" style="display: none;">
-                            <p>Are you REALLY sure? This will reset the entire game!</p>
-                            <button class="confirm-reset" id="confirmReset">Yes, Reset Everything</button>
-                            <button class="cancel-reset" id="cancelReset">Cancel</button>
-                        </div>
+                        <div class="word-display" id="wordDisplay">Press SPIN or SPACEBAR to start!</div>
                     </div>
                 </div>
             </div>
@@ -45,8 +41,10 @@
                     <span>Total: <span id="totalCalled">0</span></span>
                     <span>Remaining: <span id="remaining">80</span></span>
                 </div>
-                <div class="called-words" id="calledWords">
-                    <p class="no-words">No words called yet!</p>
+                <div class="called-words-container">
+                    <div class="called-words" id="calledWords">
+                        <p class="no-words">No words called yet!</p>
+                    </div>
                 </div>
             </div>
         </main>

@@ -9,6 +9,35 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
     color: white;
+    margin: 0;
+    padding-top: 60px; /* Space for top nav */
+}
+
+/* Top Navigation */
+.top-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 15px 20px;
+}
+
+.nav-btn {
+    background: linear-gradient(45deg, #4ecdc4, #44a08d);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
 .container {
@@ -38,17 +67,25 @@ header p {
 
 main {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr 400px;
     gap: 40px;
     align-items: start;
+    max-height: calc(100vh - 200px);
 }
 
 .game-area {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 20px;
-    padding: 40px;
+    padding: 20px 40px 40px 40px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.game-top {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    padding: 0;
 }
 
 .spinner-container {
@@ -118,29 +155,24 @@ main {
     animation: wordReveal 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-.controls {
-    text-align: center;
-}
-
-.spin-btn, .pdf-btn {
+.spin-btn {
     background: linear-gradient(45deg, #ff6b6b, #ee5a52);
     color: white;
     border: none;
-    padding: 20px 40px;
-    font-size: 1.6rem;
+    padding: 15px 30px;
+    font-size: 1.3rem;
     font-weight: 700;
-    border-radius: 60px;
+    border-radius: 50px;
     cursor: pointer;
-    margin: 15px;
     transition: all 0.3s ease;
     box-shadow: 0 6px 25px rgba(0,0,0,0.3);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-.spin-btn:hover, .pdf-btn:hover {
+.spin-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
 }
 
 .spin-btn:disabled {
@@ -149,62 +181,7 @@ main {
     transform: none;
 }
 
-.pdf-btn {
-    background: linear-gradient(45deg, #4ecdc4, #44a08d);
-}
-
-.reset-area {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255,255,255,0.2);
-}
-
-.reset-btn {
-    background: linear-gradient(45deg, #e74c3c, #c0392b);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 0.9rem;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.reset-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.reset-confirm {
-    background: rgba(231, 76, 60, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 15px;
-}
-
-.reset-confirm p {
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.confirm-reset, .cancel-reset {
-    padding: 8px 16px;
-    margin: 0 5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.confirm-reset {
-    background: #c0392b;
-    color: white;
-}
-
-.cancel-reset {
-    background: white;
-    color: #333;
-}
+/* Removed reset functionality */
 
 .history-panel {
     background: rgba(255, 255, 255, 0.1);
@@ -212,7 +189,9 @@ main {
     padding: 30px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    height: fit-content;
+    height: calc(100vh - 200px);
+    display: flex;
+    flex-direction: column;
     position: sticky;
     top: 20px;
 }
@@ -236,9 +215,33 @@ main {
     font-weight: 600;
 }
 
+.called-words-container {
+    flex: 1;
+    min-height: 0;
+}
+
 .called-words {
-    max-height: 400px;
+    max-height: calc(100vh - 400px);
     overflow-y: auto;
+    padding-right: 10px;
+}
+
+.called-words::-webkit-scrollbar {
+    width: 8px;
+}
+
+.called-words::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.called-words::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.called-words::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .word-item {
@@ -341,14 +344,33 @@ main {
     main {
         grid-template-columns: 1fr;
         gap: 30px;
+        max-height: none;
     }
     
     .history-panel {
         position: static;
+        height: 500px;
+    }
+    
+    .called-words {
+        max-height: 300px;
     }
 }
 
 @media (max-width: 768px) {
+    body {
+        padding-top: 50px;
+    }
+    
+    .top-nav {
+        padding: 10px 15px;
+    }
+    
+    .nav-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+    
     header h1 {
         font-size: 3rem;
     }
@@ -369,7 +391,7 @@ main {
     }
     
     .game-area {
-        padding: 20px;
+        padding: 15px 20px 30px 20px;
     }
     
     .word-display {
@@ -381,10 +403,17 @@ main {
         padding: 30px;
     }
     
-    .spin-btn, .pdf-btn {
-        padding: 15px 30px;
-        font-size: 1.3rem;
-        margin: 10px;
+    .spin-btn {
+        padding: 12px 25px;
+        font-size: 1.2rem;
+    }
+    
+    .history-panel {
+        height: 400px;
+    }
+    
+    .called-words {
+        max-height: 250px;
     }
 }
 
@@ -417,8 +446,8 @@ main {
         padding: 20px;
     }
     
-    .spin-btn, .pdf-btn {
-        padding: 12px 24px;
-        font-size: 1.1rem;
+    .spin-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
     }
 } 

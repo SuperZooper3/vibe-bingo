@@ -91,6 +91,7 @@ class BingoGame {
         
         this.initializeElements();
         this.bindEvents();
+        this.loadGameState();
         this.updateStats();
         this.setupBallAnimation();
     }
@@ -100,10 +101,6 @@ class BingoGame {
         this.spinnerWord = document.getElementById('spinnerWord');
         this.wordDisplay = document.getElementById('wordDisplay');
         this.spinBtn = document.getElementById('spinBtn');
-        this.resetBtn = document.getElementById('resetBtn');
-        this.resetConfirm = document.getElementById('resetConfirm');
-        this.confirmReset = document.getElementById('confirmReset');
-        this.cancelReset = document.getElementById('cancelReset');
         this.calledWordsContainer = document.getElementById('calledWords');
         this.totalCalled = document.getElementById('totalCalled');
         this.remaining = document.getElementById('remaining');
@@ -111,9 +108,14 @@ class BingoGame {
     
     bindEvents() {
         this.spinBtn.addEventListener('click', () => this.spinWheel());
-        this.resetBtn.addEventListener('click', () => this.showResetConfirm());
-        this.confirmReset.addEventListener('click', () => this.resetGame());
-        this.cancelReset.addEventListener('click', () => this.hideResetConfirm());
+        
+        // Add spacebar support for spinning
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && !this.isSpinning) {
+                event.preventDefault(); // Prevent page scroll
+                this.spinWheel();
+            }
+        });
     }
     
     spinWheel() {
@@ -180,14 +182,14 @@ class BingoGame {
             this.isSpinning = false;
             this.spinBtn.disabled = this.availableWords.length === 0;
             this.spinBtn.textContent = this.availableWords.length === 0 ? 
-                '🎉 ALL DONE!' : '🎲 SPIN THE WHEEL';
+                '🎉 ALL DONE!' : '🎲 SPIN (or press SPACE)';
             this.wordDisplay.classList.remove('revealed');
-            this.resetBtn.disabled = false;
         }, 800);
         
-        // Update UI
+        // Update UI and save state
         this.updateHistory();
         this.updateStats();
+        this.saveGameState();
         
         // Celebration if all words called
         if (this.availableWords.length === 0) {
@@ -291,36 +293,43 @@ class BingoGame {
         this.isAnimating = false;
     }
     
-    showResetConfirm() {
-        this.resetConfirm.style.display = 'block';
+    saveGameState() {
+        const gameState = {
+            availableWords: this.availableWords,
+            calledWords: this.calledWords,
+            gameStarted: this.gameStarted
+        };
+        localStorage.setItem('vibeBindoGameState', JSON.stringify(gameState));
     }
     
-    hideResetConfirm() {
-        this.resetConfirm.style.display = 'none';
-    }
-    
-    resetGame() {
-        // Reset all game state
-        this.availableWords = [...BINGO_WORDS];
-        this.calledWords = [];
-        this.isSpinning = false;
-        this.gameStarted = false;
-        
-        // Reset UI elements
-        this.spinnerWord.textContent = 'READY?';
-        this.wordDisplay.textContent = 'Click SPIN to start!';
-        this.spinBtn.disabled = false;
-        this.spinBtn.textContent = '🎲 SPIN THE WHEEL';
-        this.resetBtn.disabled = true;
-        
-        // Hide reset confirmation
-        this.hideResetConfirm();
-        
-        // Update displays
-        this.updateHistory();
-        this.updateStats();
-        
-        console.log('🎮 Game reset! Ready for a new round!');
+    loadGameState() {
+        const savedState = localStorage.getItem('vibeBindoGameState');
+        if (savedState) {
+            try {
+                const gameState = JSON.parse(savedState);
+                this.availableWords = gameState.availableWords || [...BINGO_WORDS];
+                this.calledWords = gameState.calledWords || [];
+                this.gameStarted = gameState.gameStarted || false;
+                
+                // Update initial UI based on loaded state
+                if (this.calledWords.length > 0) {
+                    const lastCalled = this.calledWords[this.calledWords.length - 1];
+                    this.wordDisplay.textContent = lastCalled.word.toUpperCase();
+                    this.spinnerWord.textContent = lastCalled.word.toUpperCase();
+                }
+                
+                // Update button text
+                this.spinBtn.textContent = this.availableWords.length === 0 ? 
+                    '🎉 ALL DONE!' : '🎲 SPIN (or press SPACE)';
+                
+                console.log(`🎮 Game state loaded! ${this.calledWords.length} words already called.`);
+            } catch (e) {
+                console.log('🎮 Starting fresh game!');
+                this.availableWords = [...BINGO_WORDS];
+                this.calledWords = [];
+                this.gameStarted = false;
+            }
+        }
     }
     
     celebrateGameEnd() {
