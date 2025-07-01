@@ -221,11 +221,11 @@ class BingoGame {
     setupBallAnimation() {
         // Create multiple animated bouncing balls inside spinner
         this.balls = [];
-        this.ballCount = 5;
+        this.ballCount = 18; // WAY MORE BALLS for maximum excitement!
         
         for (let i = 0; i < this.ballCount; i++) {
             const ball = document.createElement('div');
-            ball.className = `bouncing-ball ball-${i + 1}`;
+            ball.className = `bouncing-ball ball-${(i % 18) + 1}`; // Cycle through colors
             this.spinner.appendChild(ball);
             
             // Each ball has different properties for varied animation
@@ -236,9 +236,9 @@ class BingoGame {
                 element: ball,
                 x: 50 + Math.random() * Math.max(100, maxPos - 100),
                 y: 50 + Math.random() * Math.max(100, maxPos - 100),
-                velocityX: (Math.random() - 0.5) * 8,
-                velocityY: (Math.random() - 0.5) * 8,
-                size: 25
+                velocityX: (Math.random() - 0.5) * 12, // Faster speeds!
+                velocityY: (Math.random() - 0.5) * 12,
+                size: 20 + Math.random() * 10 // Varied sizes for more chaos
             });
         }
         
@@ -255,29 +255,41 @@ class BingoGame {
                 ball.x += ball.velocityX;
                 ball.y += ball.velocityY;
                 
-                // Bounce off edges with more dramatic physics
+                // Bounce off edges with MORE dramatic physics
                 const spinnerRect = this.spinner.getBoundingClientRect();
                 const containerSize = Math.min(spinnerRect.width, spinnerRect.height) - 40; // Dynamic size minus padding
                 if (ball.x <= ball.size || ball.x >= containerSize - ball.size) {
-                    ball.velocityX *= -0.95; // Slight energy loss for realism
+                    ball.velocityX *= -0.98; // More energy retention for chaos!
                     ball.x = Math.max(ball.size, Math.min(containerSize - ball.size, ball.x));
+                    // Add explosion effect on wall hit
+                    ball.velocityY += (Math.random() - 0.5) * 3;
                 }
                 if (ball.y <= ball.size || ball.y >= containerSize - ball.size) {
-                    ball.velocityY *= -0.95;
+                    ball.velocityY *= -0.98;
                     ball.y = Math.max(ball.size, Math.min(containerSize - ball.size, ball.y));
+                    // Add explosion effect on wall hit
+                    ball.velocityX += (Math.random() - 0.5) * 3;
                 }
                 
                 // Apply gravity effect
-                ball.velocityY += 0.1;
+                ball.velocityY += 0.15;
                 
-                // Apply position
+                // Apply position and size
                 ball.element.style.left = `${ball.x - ball.size/2}px`;
                 ball.element.style.top = `${ball.y - ball.size/2}px`;
+                ball.element.style.width = `${ball.size}px`;
+                ball.element.style.height = `${ball.size}px`;
                 
-                // Add some random motion to keep it interesting
-                if (Math.random() < 0.005) {
-                    ball.velocityX += (Math.random() - 0.5) * 2;
-                    ball.velocityY += (Math.random() - 0.5) * 2;
+                // Add MORE random motion for chaos!
+                if (Math.random() < 0.01) {
+                    ball.velocityX += (Math.random() - 0.5) * 4;
+                    ball.velocityY += (Math.random() - 0.5) * 4;
+                }
+                
+                // Random direction changes for extra excitement
+                if (Math.random() < 0.003) {
+                    ball.velocityX *= -0.8;
+                    ball.velocityY *= -0.8;
                 }
             });
             
