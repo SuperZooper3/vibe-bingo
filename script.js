@@ -1,5 +1,6 @@
 // SE Society Bingo Words - 80 Epic Terms!
-const BINGO_WORDS = [
+// Note: This will be replaced by saved words if they exist
+let BINGO_WORDS = [
     "Stack Overflow",
     "Deadline Panic",
     "Code Review",
@@ -84,14 +85,17 @@ const BINGO_WORDS = [
 
 class BingoGame {
     constructor() {
-        this.availableWords = [...BINGO_WORDS];
         this.calledWords = [];
         this.isSpinning = false;
         this.gameStarted = false;
         
         this.initializeElements();
         this.bindEvents();
+        
+        // Load custom words FIRST, then set available words
         this.loadCustomWords();
+        this.availableWords = [...BINGO_WORDS];
+        
         this.loadGameState();
         this.updateHistory(); // Ensure history loads on startup
         this.updateStats();
@@ -413,6 +417,7 @@ class BingoGame {
         
         // Reload saved words and reset game state
         this.loadCustomWords();
+        this.availableWords = [...BINGO_WORDS]; // Reset to full word list
         this.calledWords = [];
         this.gameStarted = false;
         
@@ -432,6 +437,8 @@ class BingoGame {
     }
     
     loadCustomWords() {
+        console.log('🔄 Loading custom words...');
+        
         // Initialize with default words if no saved list exists
         let savedWords = localStorage.getItem('vibeBingoUnifiedWords');
         
@@ -439,35 +446,33 @@ class BingoGame {
             // First time - save default words
             const defaultWords = this.getDefaultWords();
             localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
-            BINGO_WORDS = defaultWords;
-            console.log('📝 Initialized with default SE words and saved them for future use!');
+            BINGO_WORDS = [...defaultWords]; // Make a copy to avoid reference issues
+            console.log(`📝 Initialized with ${BINGO_WORDS.length} default SE words and saved them for future use!`);
         } else {
             try {
                 const parsedWords = JSON.parse(savedWords);
-                if (parsedWords && parsedWords.length >= 25) {
-                    BINGO_WORDS = parsedWords;
-                    console.log(`📝 Loaded ${parsedWords.length} saved words for the game!`);
+                if (parsedWords && Array.isArray(parsedWords) && parsedWords.length >= 25) {
+                    BINGO_WORDS = [...parsedWords]; // Make a copy to avoid reference issues
+                    console.log(`📝 Loaded ${BINGO_WORDS.length} saved custom words for the game!`);
+                    console.log(`📝 First few words: ${BINGO_WORDS.slice(0, 5).join(', ')}...`);
                 } else {
                     // Fallback to defaults if saved words are invalid
+                    console.warn(`📝 Saved words were invalid (${parsedWords ? parsedWords.length : 0} words), resetting to defaults.`);
                     const defaultWords = this.getDefaultWords();
                     localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
-                    BINGO_WORDS = defaultWords;
-                    console.log('📝 Saved words were invalid, reset to defaults.');
+                    BINGO_WORDS = [...defaultWords];
+                    console.log(`📝 Reset to ${BINGO_WORDS.length} default words.`);
                 }
             } catch (e) {
-                console.error('Error loading saved words:', e);
+                console.error('📝 Error loading saved words:', e);
                 const defaultWords = this.getDefaultWords();
                 localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
-                BINGO_WORDS = defaultWords;
-                console.log('📝 Error loading saved words, reset to defaults.');
+                BINGO_WORDS = [...defaultWords];
+                console.log(`📝 Error recovery: Reset to ${BINGO_WORDS.length} default words.`);
             }
         }
         
-        // Reset available words to use the loaded word list
-        this.availableWords = [...BINGO_WORDS];
-        
-        // Update display
-        this.updateStats();
+        console.log(`✅ Word loading complete! Using ${BINGO_WORDS.length} words for the game.`);
     }
     
     getDefaultWords() {
