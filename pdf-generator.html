@@ -84,11 +84,14 @@
         .bingo-sheet {
             background: white;
             color: #333;
-            margin: 20px 0;
+            margin: 20px auto;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             page-break-after: always;
+            width: 90%;
+            max-width: 800px;
+            min-width: 600px;
         }
         
         .sheet-header {
@@ -128,32 +131,36 @@
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 0px;
-            padding: 20px;
+            padding: 20px 30px;
             background: white;
+            width: calc(100% - 40px);
+            margin: 0 auto;
+            justify-content: center;
         }
         
         .bingo-cell {
             background: white;
             border: 3px solid #000;
-            padding: 12px 8px;
+            padding: 6px;
             text-align: center;
             font-weight: 600;
-            min-height: 85px;
+            aspect-ratio: 1 / 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 1.05rem;
             word-wrap: break-word;
             hyphens: auto;
-            line-height: 1.2;
+            line-height: 1.1;
             color: #000;
         }
         
         .bingo-cell.header {
             background: #000;
             color: white;
-            font-size: 1.2rem;
-            font-weight: 800;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
         }
         
         .bingo-cell.free {
@@ -172,12 +179,14 @@
         
         @media print {
             @page {
-                margin: 0.5in;
+                margin: 0.3in;
+                size: letter;
             }
             
             body {
-                background: white;
-                color: black;
+                background: white !important;
+                color: black !important;
+                font-size: 12px;
             }
             
             .generator-panel {
@@ -190,22 +199,72 @@
             }
             
             .bingo-sheet {
-                box-shadow: none;
-                border: 3px solid #000;
-                margin-bottom: 0;
+                box-shadow: none !important;
+                border: 2px solid #000 !important;
+                margin: 0 auto 0.2in auto !important;
+                width: 100% !important;
+                max-width: 7in !important;
+                min-width: unset !important;
+                border-radius: 0 !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .sheet-header {
+                padding: 12px !important;
+            }
+            
+            .sheet-header h2 {
+                font-size: 1.4rem !important;
+                margin-bottom: 3px !important;
+            }
+            
+            .sheet-header p {
+                font-size: 0.9rem !important;
+            }
+            
+            .name-section {
+                padding: 8px 15px !important;
+                border-bottom: 2px solid #000 !important;
+            }
+            
+            .bingo-grid {
+                width: 100% !important;
+                padding: 10px !important;
+                margin: 0 !important;
             }
             
             .bingo-cell {
-                border: 3px solid #000;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
+                border: 2px solid #000 !important;
+                padding: 4px 2px !important;
+                font-size: 0.75rem !important;
+                line-height: 1.0 !important;
+                min-height: unset !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .bingo-cell.header {
+                font-size: 1.1rem !important;
+                font-weight: 900 !important;
+                letter-spacing: 1px !important;
+            }
+            
+            .bingo-cell.free {
+                font-size: 0.9rem !important;
+                font-weight: 800 !important;
             }
             
             .bingo-cell.header, .bingo-cell.free, .sheet-header {
                 background: #000 !important;
                 color: white !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            .sheet-footer {
+                padding: 8px 15px !important;
+                font-size: 0.7rem !important;
+                border-top: 2px solid #000 !important;
             }
         }
     </style>
