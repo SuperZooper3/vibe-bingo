@@ -54,6 +54,10 @@ class BingoGame {
         this.spinBtn.disabled = true;
         this.spinBtn.textContent = '🌪️ SPINNING...';
         
+        // Pre-select the final word to avoid race conditions
+        const randomIndex = Math.floor(Math.random() * this.availableWords.length);
+        this.selectedWord = this.availableWords[randomIndex];
+        
         // Start ball animation
         this.startBallAnimation();
         
@@ -67,30 +71,40 @@ class BingoGame {
     }
     
     showSpinningWords() {
-        const spinDuration = 2000;
+        const spinDuration = 1900; // End 100ms BEFORE reveal to prevent race condition
         const interval = 100;
         let elapsed = 0;
         
-        const spinInterval = setInterval(() => {
+        this.spinInterval = setInterval(() => {
+            // Don't overwrite if we're already stopping
+            if (elapsed >= spinDuration) {
+                clearInterval(this.spinInterval);
+                this.spinInterval = null;
+                return;
+            }
+            
             const randomWord = this.availableWords[Math.floor(Math.random() * this.availableWords.length)];
             this.spinnerWord.textContent = randomWord.toUpperCase();
             
             elapsed += interval;
-            if (elapsed >= spinDuration) {
-                clearInterval(spinInterval);
-            }
         }, interval);
     }
     
     revealWord() {
-        // Pick a random word from available words
-        const randomIndex = Math.floor(Math.random() * this.availableWords.length);
-        const selectedWord = this.availableWords[randomIndex];
+        // Clear any remaining spin interval to prevent race condition
+        if (this.spinInterval) {
+            clearInterval(this.spinInterval);
+            this.spinInterval = null;
+        }
+        
+        // Use the pre-selected word
+        const selectedWord = this.selectedWord;
+        const selectedIndex = this.availableWords.indexOf(selectedWord);
         
         console.log(`🎲 Selected word: "${selectedWord}" (was ${this.availableWords.length} words available)`);
         
         // Remove from available words and add to called words
-        this.availableWords.splice(randomIndex, 1);
+        this.availableWords.splice(selectedIndex, 1);
         this.calledWords.push({
             word: selectedWord,
             number: this.calledWords.length + 1,
@@ -100,12 +114,10 @@ class BingoGame {
         // Stop ball animation
         this.stopBallAnimation();
         
-        // Dramatic reveal
+        // Ensure both displays show the same word immediately
+        this.spinnerWord.textContent = selectedWord.toUpperCase();
         this.wordDisplay.textContent = selectedWord.toUpperCase();
         this.wordDisplay.classList.add('revealed');
-        
-        // Update spinner to show the word
-        this.spinnerWord.textContent = selectedWord.toUpperCase();
         
         // Reset button states
         setTimeout(() => {
