@@ -1,4 +1,4 @@
-# 🎯 SE Society Vibe Bingo
+# 🎯 SE Society Vibe Coded Bingo
 
 A fun, modern bingo calling app designed for live events! Perfect for projecting during presentations or gatherings.
 
@@ -150,4 +150,4 @@ vibe-bingo/
 
 ---
 
-Made with 💜 for the SE Society community. Ready to bring some vibe to your next event! 🚀
+Made with 💜 for the SE Society community by Cursor (I  did not write any of this code lmfao). Ready to bring some vibe to your next event! 🚀
