@@ -1,0 +1,73 @@
+/* Print-specific styles to remove browser headers/footers */
+@media print {
+    @page {
+        margin: 0.5in;
+        size: letter;
+        /* Attempt to remove headers/footers */
+        margin-top: 0.3in;
+        margin-bottom: 0.3in;
+    }
+    
+    /* Hide all browser chrome elements */
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        color: black !important;
+        font-family: Arial, sans-serif !important;
+    }
+    
+    /* Force exact color reproduction for black elements */
+    .bingo-cell.header, 
+    .bingo-cell.free, 
+    .sheet-header {
+        background: #000 !important;
+        color: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    
+    /* Ensure borders print correctly with maximum thickness */
+    .bingo-cell,
+    .bingo-sheet,
+    .sheet-footer,
+    .name-section {
+        border-color: #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .bingo-cell {
+        border-width: 3px !important;
+        border-style: solid !important;
+    }
+    
+    /* Hide everything except sheets when printing */
+    .generator-panel {
+        display: none !important;
+    }
+    
+    /* Ensure page breaks work correctly */
+    .bingo-sheet {
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+    
+    .bingo-sheet:last-child {
+        page-break-after: auto;
+    }
+}
+
+/* Alternative method using JavaScript to control print settings */
+.print-ready {
+    background: white;
+    color: black;
+}
+
+.print-ready .bingo-cell.header,
+.print-ready .bingo-cell.free,
+.print-ready .sheet-header {
+    background: black !important;
+    color: white !important;
+} 

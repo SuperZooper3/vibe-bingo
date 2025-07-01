@@ -14,11 +14,12 @@ A fun, modern bingo calling app designed for live events! Perfect for projecting
 - **Event-Ready**: Single-user interface perfect for projection
 
 ### 📄 PDF Sheet Generator
-- **Printable Bingo Sheets**: Generate unique 5x5 bingo cards
+- **Print-Optimized Sheets**: Monochrome black & white design for clear printing
+- **Thick Grid Lines**: 3px borders for excellent visibility and photocopying
+- **Name Fields**: Built-in space for participants to write their names
 - **Massive Scale Support**: Generate up to 200 sheets for large events
 - **Full Customization**: Customize event title, subtitle, and footer text
-- **Automatic Uniqueness**: Each sheet is guaranteed to be different
-- **Full-Page Optimized**: Perfect text sizing and layout for printing
+- **Clean Print Layout**: Removes browser headers/footers for professional sheets
 - **FREE Center Square**: Classic bingo format with center free space
 
 ## 🚀 Getting Started
@@ -54,6 +55,7 @@ A fun, modern bingo calling app designed for live events! Perfect for projecting
    - Choose how many sheets you need (1-200 sheets supported!)
    - Customize your event title, subtitle, and footer text
    - Click "Generate Sheets" then "Print All"
+   - **Print Tip**: Turn OFF "Headers and footers" in browser print dialog for cleanest results
    - Distribute printed sheets to participants
 
 ### During the Event:

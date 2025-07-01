@@ -148,6 +148,10 @@ class BingoSheetGenerator {
                     <h2>${title}</h2>
                     <p>${subtitle}</p>
                 </div>
+                <div class="name-section">
+                    <strong>Name:</strong>
+                    <div class="name-line"></div>
+                </div>
                 <div class="bingo-grid">
                     ${headerRow.map(letter => 
                         `<div class="bingo-cell header">${letter}</div>`
@@ -227,6 +231,85 @@ function generateSheets() {
             firstSheet.scrollIntoView({ behavior: 'smooth' });
         }
     }, count > 50 ? 200 : 100);
+}
+
+// Print function with better browser support
+function printSheets() {
+    // Add print-ready class for better styling control
+    document.body.classList.add('print-ready');
+    
+    try {
+        // Try to open a clean print window
+        const printWindow = window.open('', '_blank', 'width=800,height=600');
+        if (printWindow) {
+            // Create a clean print version
+            const sheetsContent = document.getElementById('sheetsContainer').innerHTML;
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>SE Society Bingo Sheets</title>
+                    <meta charset="UTF-8">
+                    <style>
+                        @page { 
+                            margin: 0.5in; 
+                            size: letter; 
+                        }
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            margin: 0; 
+                            padding: 0; 
+                            background: white;
+                            color: black;
+                        }
+                        .bingo-sheet {
+                            page-break-after: always;
+                            page-break-inside: avoid;
+                            margin-bottom: 20px;
+                        }
+                        .bingo-sheet:last-child {
+                            page-break-after: auto;
+                        }
+                        .bingo-cell {
+                            border: 3px solid #000 !important;
+                            -webkit-print-color-adjust: exact;
+                            print-color-adjust: exact;
+                        }
+                        .bingo-cell.header, .bingo-cell.free, .sheet-header {
+                            background: #000 !important;
+                            color: white !important;
+                            -webkit-print-color-adjust: exact;
+                            print-color-adjust: exact;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${sheetsContent}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            
+            // Wait a moment for content to load, then print
+            setTimeout(() => {
+                printWindow.print();
+                setTimeout(() => {
+                    printWindow.close();
+                }, 1000);
+            }, 500);
+        } else {
+            throw new Error('Pop-up blocked');
+        }
+    } catch (error) {
+        // Fallback to regular print if pop-up is blocked
+        console.log('Using fallback print method');
+        window.print();
+    }
+    
+    // Remove print-ready class after a delay
+    setTimeout(() => {
+        document.body.classList.remove('print-ready');
+    }, 2000);
 }
 
 // Generate default sheets on page load

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bingo Sheet Generator - SE Society</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="print-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         .generator-container {
@@ -91,10 +92,26 @@
         }
         
         .sheet-header {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: #000;
             color: white;
             padding: 20px;
             text-align: center;
+        }
+        
+        .name-section {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 3px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .name-line {
+            border-bottom: 2px solid #000;
+            min-width: 200px;
+            height: 25px;
+            margin-left: 10px;
         }
         
         .sheet-header h2 {
@@ -110,14 +127,14 @@
         .bingo-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 2px;
+            gap: 0px;
             padding: 20px;
-            background: #f8f9fa;
+            background: white;
         }
         
         .bingo-cell {
             background: white;
-            border: 2px solid #dee2e6;
+            border: 3px solid #000;
             padding: 12px 8px;
             text-align: center;
             font-weight: 600;
@@ -129,17 +146,18 @@
             word-wrap: break-word;
             hyphens: auto;
             line-height: 1.2;
+            color: #000;
         }
         
         .bingo-cell.header {
-            background: #667eea;
+            background: #000;
             color: white;
             font-size: 1.2rem;
             font-weight: 800;
         }
         
         .bingo-cell.free {
-            background: #4ecdc4;
+            background: #000;
             color: white;
             font-weight: 800;
         }
@@ -148,11 +166,15 @@
             padding: 15px 20px;
             text-align: center;
             font-size: 0.9rem;
-            color: #666;
-            border-top: 1px solid #dee2e6;
+            color: #000;
+            border-top: 3px solid #000;
         }
         
         @media print {
+            @page {
+                margin: 0.5in;
+            }
+            
             body {
                 background: white;
                 color: black;
@@ -164,7 +186,21 @@
             
             .bingo-sheet {
                 box-shadow: none;
-                border: 1px solid #333;
+                border: 3px solid #000;
+                margin-bottom: 0;
+            }
+            
+            .bingo-cell {
+                border: 3px solid #000;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .bingo-cell.header, .bingo-cell.free, .sheet-header {
+                background: #000 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
         }
     </style>
@@ -203,7 +239,16 @@
                 
                 <div class="button-row">
                     <button class="generate-btn" onclick="generateSheets()">🎲 Generate Sheets</button>
-                    <button class="generate-btn" onclick="window.print()" style="background: linear-gradient(45deg, #ff6b6b, #ee5a52);">🖨️ Print All</button>
+                    <button class="generate-btn" onclick="printSheets()" style="background: linear-gradient(45deg, #ff6b6b, #ee5a52);">🖨️ Print All</button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px; color: rgba(255,255,255,0.7); font-size: 0.9rem;">
+                    <p><strong>💡 Print Tip:</strong> In your browser's print dialog:</p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>• Turn OFF "Headers and footers" for clean sheets</li>
+                        <li>• Set margins to "Minimum" for best fit</li>
+                        <li>• Choose "More settings" → uncheck "Headers and footers"</li>
+                    </ul>
                 </div>
             </div>
             
@@ -211,11 +256,12 @@
                 <p><strong>Instructions:</strong></p>
                 <ul style="list-style: none; padding: 0;">
                     <li>• Each sheet will have 24 random words from our 80-word collection + 1 FREE space</li>
-                    <li>• Sheets are automatically unique (no duplicates)</li>
+                    <li>• Monochrome black & white design optimized for printing</li>
+                    <li>• Thick borders for clear grid lines</li>
+                    <li>• Name field for participants</li>
                     <li>• Supports up to 200 sheets for large events</li>
                     <li>• Customize your event title and text</li>
                     <li>• Center square is always FREE</li>
-                    <li>• Full-page optimized for printing</li>
                 </ul>
             </div>
         </div>
