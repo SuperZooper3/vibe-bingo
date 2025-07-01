@@ -411,7 +411,7 @@ class BingoGame {
         this.stopBallAnimation();
         this.isSpinning = false;
         
-        // Reload custom words and reset game state
+        // Reload saved words and reset game state
         this.loadCustomWords();
         this.calledWords = [];
         this.gameStarted = false;
@@ -432,30 +432,63 @@ class BingoGame {
     }
     
     loadCustomWords() {
-        // Check if custom words are available and should be used
-        const customWords = localStorage.getItem('vibeBingoCustomWordsForGame');
-        if (customWords) {
+        // Initialize with default words if no saved list exists
+        let savedWords = localStorage.getItem('vibeBingoUnifiedWords');
+        
+        if (!savedWords) {
+            // First time - save default words
+            const defaultWords = this.getDefaultWords();
+            localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
+            BINGO_WORDS = defaultWords;
+            console.log('📝 Initialized with default SE words and saved them for future use!');
+        } else {
             try {
-                const parsedWords = JSON.parse(customWords);
+                const parsedWords = JSON.parse(savedWords);
                 if (parsedWords && parsedWords.length >= 25) {
                     BINGO_WORDS = parsedWords;
-                    console.log(`📝 Loaded ${parsedWords.length} custom words for the game!`);
-                    
-                    // Reset available words to use custom words
-                    this.availableWords = [...BINGO_WORDS];
-                    
-                    // Update display
-                    this.remaining.textContent = this.availableWords.length;
-                    
-                    return;
+                    console.log(`📝 Loaded ${parsedWords.length} saved words for the game!`);
+                } else {
+                    // Fallback to defaults if saved words are invalid
+                    const defaultWords = this.getDefaultWords();
+                    localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
+                    BINGO_WORDS = defaultWords;
+                    console.log('📝 Saved words were invalid, reset to defaults.');
                 }
             } catch (e) {
-                console.error('Error loading custom words:', e);
+                console.error('Error loading saved words:', e);
+                const defaultWords = this.getDefaultWords();
+                localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
+                BINGO_WORDS = defaultWords;
+                console.log('📝 Error loading saved words, reset to defaults.');
             }
         }
         
-        // Fallback to default words if no custom words or error
-        console.log('📝 Using default SE words for the game.');
+        // Reset available words to use the loaded word list
+        this.availableWords = [...BINGO_WORDS];
+        
+        // Update display
+        this.updateStats();
+    }
+    
+    getDefaultWords() {
+        return [
+            "Stack Overflow", "Deadline Panic", "Code Review", "Merge Conflict", "Rubber Duck",
+            "Spaghetti Code", "Technical Debt", "Race Condition", "Null Pointer", "Recursion",
+            "Big O Notation", "Refactoring", "Legacy Code", "Debugging", "Unit Tests",
+            "Pair Programming", "Agile Standup", "Git Blame", "Prod Down", "Works On My Machine",
+            "Coffee Break", "All Nighter", "Imposter Syndrome", "Feature Creep", "Documentation",
+            "Scrum Master", "Sprint Planning", "Retrospective", "Hotfix Friday", "Dependency Hell",
+            "Code Freeze", "Memory Leak", "Edge Case", "Yak Shaving", "Code Monkey",
+            "DevOps Magic", "Container Chaos", "Microservices", "Monolith Monster", "API Gateway",
+            "Database Lock", "Caching Layer", "Load Balancer", "Circuit Breaker", "Blue Green Deploy",
+            "Rollback Drama", "Docker Whale", "Kubernetes Chaos", "Git Rebase", "Cherry Pick",
+            "Squash Commits", "Branch Protection", "Pull Request", "Code Coverage", "Test Pyramid",
+            "Mocking Framework", "Integration Test", "End to End", "Selenium Grid", "Performance Test",
+            "Load Testing", "Stress Testing", "Security Audit", "Penetration Test", "Code Smell",
+            "Design Pattern", "Singleton Abuse", "Factory Pattern", "Observer Pattern", "Builder Pattern",
+            "Dependency Injection", "Inversion of Control", "SOLID Principles", "Clean Code", "Code Kata",
+            "Pair Debugging", "Mob Programming", "Hotfix Hero", "Regex Wizard", "Caffeine Driven"
+        ];
     }
 }
 

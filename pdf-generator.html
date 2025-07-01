@@ -221,30 +221,21 @@
             <h1 style="text-align: center; margin-bottom: 20px;">📄 Bingo Sheet Generator</h1>
             <p style="text-align: center; margin-bottom: 30px;">Generate unique 5x5 bingo sheets for your participants!</p>
             
-            <!-- Custom Words Section -->
+            <!-- Unified Word List Section -->
             <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 20px;">
-                <h3 style="text-align: center; margin-bottom: 15px;">🎯 Word List Options</h3>
-                <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 15px;">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="radio" name="wordSource" value="default" checked onchange="toggleWordSource()">
-                        <span>Use Default SE Words (<span id="defaultWordCount">80</span> words)</span>
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                        <input type="radio" name="wordSource" value="custom" onchange="toggleWordSource()">
-                        <span>Use Custom Words</span>
-                    </label>
-                </div>
+                <h3 style="text-align: center; margin-bottom: 15px;">🎯 Word List Editor</h3>
+                <p style="text-align: center; margin-bottom: 15px; font-size: 0.9rem; opacity: 0.9;">
+                    This word list is shared between sheet generation and the main game. Edit it to customize your bingo experience!
+                </p>
                 
-                <div id="customWordsEditor" style="display: none;">
-                    <label for="customWordsList" style="display: block; margin-bottom: 10px; font-weight: 600;">Enter your custom words (one per line, minimum 25 words recommended):</label>
-                    <textarea id="customWordsList" rows="8" style="width: 100%; padding: 10px; border: none; border-radius: 5px; font-family: monospace; font-size: 0.9rem; resize: vertical;" placeholder="Stack Overflow&#10;Technical Debt&#10;Code Review&#10;Merge Conflict&#10;...add more words here"></textarea>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                        <div>
-                            <button type="button" onclick="saveCustomWords()" style="background: linear-gradient(45deg, #4ecdc4, #44a08d); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; margin-right: 10px;">💾 Save Words</button>
-                            <button type="button" onclick="loadCustomWords()" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer;">📂 Load Saved</button>
-                        </div>
-                        <span id="wordCount" style="font-weight: 600;">0 words</span>
+                <label for="customWordsList" style="display: block; margin-bottom: 10px; font-weight: 600;">Your bingo words (one per line, minimum 25 words recommended):</label>
+                <textarea id="customWordsList" rows="10" style="width: 100%; padding: 10px; border: none; border-radius: 5px; font-family: monospace; font-size: 0.9rem; resize: vertical;" placeholder="Stack Overflow&#10;Technical Debt&#10;Code Review&#10;Merge Conflict&#10;...add more words here"></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                    <div>
+                        <button type="button" onclick="saveCustomWords()" style="background: linear-gradient(45deg, #4ecdc4, #44a08d); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; margin-right: 10px;">💾 Save Words</button>
+                        <button type="button" onclick="resetToDefaultWords()" style="background: linear-gradient(45deg, #ff6b6b, #ee5a52); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer;">🔄 Reset to SE Defaults</button>
                     </div>
+                    <span id="wordCount" style="font-weight: 600;">0 words</span>
                 </div>
             </div>
             

@@ -273,18 +273,7 @@ function printSheets() {
 }
 
 // Custom word management
-function toggleWordSource() {
-    const customEditor = document.getElementById('customWordsEditor');
-    const useCustom = document.querySelector('input[name="wordSource"]:checked').value === 'custom';
-    
-    customEditor.style.display = useCustom ? 'block' : 'none';
-    
-    if (useCustom) {
-        loadCustomWords();
-    }
-    
-    updateAvailableWordCount();
-}
+// Remove toggleWordSource function as we no longer need radio buttons
 
 function saveCustomWords() {
     const customWordsText = document.getElementById('customWordsList').value.trim();
@@ -302,28 +291,48 @@ function saveCustomWords() {
         return;
     }
     
-    localStorage.setItem('vibeBingoCustomWords', JSON.stringify(customWords));
-    
-    // Also save to main game
-    localStorage.setItem('vibeBingoCustomWordsForGame', JSON.stringify(customWords));
+    // Save to unified storage
+    localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(customWords));
     
     updateWordCount();
     updateAvailableWordCount();
     
-    alert(`✅ Saved ${customWords.length} custom words! These will be used for both sheet generation and the main game.`);
+    alert(`✅ Saved ${customWords.length} words! These will be used for both sheet generation and the main game.`);
 }
 
-function loadCustomWords() {
-    const savedWords = localStorage.getItem('vibeBingoCustomWords');
+function loadSavedWords() {
+    const savedWords = localStorage.getItem('vibeBingoUnifiedWords');
     if (savedWords) {
         try {
-            const customWords = JSON.parse(savedWords);
-            document.getElementById('customWordsList').value = customWords.join('\n');
+            const words = JSON.parse(savedWords);
+            document.getElementById('customWordsList').value = words.join('\n');
             updateWordCount();
         } catch (e) {
             console.error('Error loading saved words:', e);
+            // Load defaults if error
+            document.getElementById('customWordsList').value = getDefaultWords().join('\n');
+            updateWordCount();
         }
+    } else {
+        // Initialize with defaults
+        const defaultWords = getDefaultWords();
+        localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
+        document.getElementById('customWordsList').value = defaultWords.join('\n');
+        updateWordCount();
     }
+}
+
+function resetToDefaultWords() {
+    const confirmed = confirm('🔄 Reset to default SE words? This will replace your current word list.');
+    if (!confirmed) return;
+    
+    const defaultWords = getDefaultWords();
+    localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
+    document.getElementById('customWordsList').value = defaultWords.join('\n');
+    updateWordCount();
+    updateAvailableWordCount();
+    
+    alert('✅ Reset to default SE words! Your main game will use these words too.');
 }
 
 function updateWordCount() {
@@ -341,31 +350,26 @@ function updateWordCount() {
 }
 
 function updateAvailableWordCount() {
-    const useCustom = document.querySelector('input[name="wordSource"]:checked').value === 'custom';
-    let wordCount;
-    
-    if (useCustom) {
-        const customWordsText = document.getElementById('customWordsList').value.trim();
-        wordCount = customWordsText ? customWordsText.split('\n').filter(word => word.trim().length > 0).length : 0;
-    } else {
-        wordCount = getDefaultWords().length;
-    }
-    
-    document.getElementById('availableWords').textContent = wordCount;
+    const savedWords = getCurrentWordList();
+    document.getElementById('availableWords').textContent = savedWords.length;
 }
 
 function getCurrentWordList() {
-    const useCustom = document.querySelector('input[name="wordSource"]:checked').value === 'custom';
+    // Always use the unified saved word list
+    const savedWords = localStorage.getItem('vibeBingoUnifiedWords');
     
-    if (useCustom) {
-        const customWordsText = document.getElementById('customWordsList').value.trim();
-        if (customWordsText) {
-            return customWordsText.split('\n')
-                .map(word => word.trim())
-                .filter(word => word.length > 0);
+    if (savedWords) {
+        try {
+            const parsedWords = JSON.parse(savedWords);
+            if (parsedWords && parsedWords.length >= 24) {
+                return parsedWords;
+            }
+        } catch (e) {
+            console.error('Error loading saved words:', e);
         }
     }
     
+    // Fallback to defaults if no saved words
     return getDefaultWords();
 }
 
@@ -397,18 +401,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up event listeners
     const customWordsList = document.getElementById('customWordsList');
     if (customWordsList) {
-        customWordsList.addEventListener('input', updateWordCount);
+        customWordsList.addEventListener('input', () => {
+            // Update word count immediately for visual feedback
+            updateWordCount();
+            // Update available word count
+            updateAvailableWordCount();
+        });
     }
     
     // Auto-generate when settings change
     setupAutoGeneration();
     
-    // Load any saved custom words
-    loadCustomWords();
+    // Load the unified word list
+    loadSavedWords();
     updateAvailableWordCount();
-    
-    // Initialize default word count display
-    document.getElementById('defaultWordCount').textContent = getDefaultWords().length;
     
     // Auto-generate initial sheets
     generateSheets();
@@ -434,24 +440,14 @@ function setupAutoGeneration() {
         }
     });
     
-    // Auto-generate when word source changes
-    const wordSourceInputs = document.querySelectorAll('input[name="wordSource"]');
-    wordSourceInputs.forEach(input => {
-        input.addEventListener('change', () => {
-            setTimeout(generateSheets, 100); // Small delay for UI update
-        });
-    });
-    
-    // Auto-generate when custom words change
+    // Auto-generate when word list changes
     const customWordsList = document.getElementById('customWordsList');
     if (customWordsList) {
         customWordsList.addEventListener('input', () => {
             clearTimeout(window.customWordsTimer);
             window.customWordsTimer = setTimeout(() => {
-                if (document.querySelector('input[name="wordSource"]:checked').value === 'custom') {
-                    generateSheets();
-                }
-            }, 1000); // Longer delay for typing
+                generateSheets();
+            }, 3000); // Wait 3 seconds after user stops typing
         });
     }
 } 
