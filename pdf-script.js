@@ -1,7 +1,7 @@
 // 🎯 SINGLE SOURCE OF TRUTH FOR ALL BINGO WORDS
 // This is the ONLY place where the default word list is defined
 // Both the main game and PDF generator pull from the unified localStorage system
-let BINGO_WORDS = [
+const BINGO_WORDS = [
     "Stack Overflow",
     "Vibe Coding",
     "Code Review",
@@ -346,21 +346,31 @@ function resetToDefaultWords() {
 
 function updateWordCount() {
     const customWordsText = document.getElementById('customWordsList').value.trim();
-    const wordCount = customWordsText ? customWordsText.split('\n').filter(word => word.trim().length > 0).length : 0;
-    document.getElementById('wordCount').textContent = `${wordCount} words`;
+    // Count actual entries, not just lines (filters out empty lines and trims whitespace)
+    const actualEntries = customWordsText ? 
+        customWordsText.split('\n')
+            .map(word => word.trim())
+            .filter(word => word.length > 0) : [];
+    
+    const entryCount = actualEntries.length;
+    document.getElementById('wordCount').textContent = `${entryCount} entries`;
     
     const countEl = document.getElementById('wordCount');
-    if (wordCount < 25) {
+    if (entryCount < 25) {
         countEl.style.color = '#ff6b6b';
         countEl.textContent += ' (need at least 25)';
     } else {
         countEl.style.color = '#4ecdc4';
     }
+    
+    // Debug log to show actual vs expected
+    console.log(`📊 Textarea entries: ${entryCount}, Default array entries: ${BINGO_WORDS.length}`);
 }
 
 function updateAvailableWordCount() {
     const savedWords = getCurrentWordList();
     document.getElementById('availableWords').textContent = savedWords.length;
+    console.log(`🎯 Available words for generation: ${savedWords.length}`);
 }
 
 function getCurrentWordList() {
@@ -383,30 +393,7 @@ function getCurrentWordList() {
 }
 
 function getDefaultWords() {
-    return [
-        "Stack Overflow", "Vibe Coding", "Code Review", "Merge Conflict", "Rubber Duck",
-        "Your Spaghetti Code", "Tech Debt", "Null Pointer", "Recursion", "Big O Notation",
-        "Debugging", "Unit Tests", "Pair Programming", "Third Standup of the Day", "Prod Down",
-        "I Broke Prod", "Works On My Machine", "All Nighter", "Imposter Syndrome", "Feature Creep",
-        '"Documentation"', "Dependency Hell", "Memory Leak", "Edge Case", "Code Monkey",
-        "Fuck Kubernetes", "Database Lock", "AVL Tree", "Observer Pattern", "Generating Series",
-        "Rollback Drama", "Git Rebase", "Cherry Pick", "Pull Request", "Integration Test",
-        "Penetration Test", "Dependency Injection", "SOLID", "Meeting About a Meeting", "Coffee Driven Development",
-        "Works on Localhost", "Push to Main Friday", "No Tests? No Problem", "Magic Number 42", "TODO: Fix This Later",
-        "It's Not a Bug, It's a Feature", "Have You Tried Restarting?", "Microservice Hell", "Ticket Limbo", "Slack Notification PTSD",
-        "Code Review Nitpicking", "Intern Asked Good Question", "We'll Refactor Later", "I use Linux Actually", "Hotfix on Friday 5PM",
-        "Off by One Error", "Segmentation Fault", "Infinite Loop", "Waterloo Works", "Coop Job Rejection",
-        "Resume Padding", "Leetcode Grinding", "System Design Interview", "Whiteboard Anxiety", "Networking Event Small Talk",
-        "LinkedIn Humble Brag", "Startup Ping Pong Table", "Free Pizza Motivation", "Hackathon Energy Drinks", "Open Source Contribution",
-        "GitHub Green Squares", "Stackoverflow Reputation", "Vim Exit Tutorial", "Emacs vs Vim Holy War", "Dark Mode Everything",
-        "RGB Keyboard Priorities", "Mechanical Keyboard Noise", "Multiple Monitor Setup", "Docker Container Confusion", "Kubernetes YAML Hell",
-        "Terraform Infrastructure", "CI/CD Pipeline Broken", "Merge Conflict Nightmare", "Git Rebase Gone Wrong", "Force Push Disaster",
-        "Production Hotfix Panic", "Database Migration Fear", "Cache Invalidation Hell", "Distributed System Chaos", "Microservice Madness",
-        "API Rate Limiting", "OAuth Implementation Pain", "SSL Certificate Expired", "DNS Propagation Delay", "Load Balancer Mystery",
-        "CDN Cache Issues", "Memory Leak Hunt", "CPU Usage Spike", "Database Deadlock", "N+1 Query Problem",
-        "Circular Dependency", "Deprecated Library Usage", "Legacy Code Archaeology", "Technical Debt Compound Interest", "Code Review Perfectionism",
-        "Pair Programming Awkwardness", "Rubber Duck Debugging", "Print Statement Debugging", "Console.log Everywhere", "Debugger Breakpoint Party"
-    ];
+    return BINGO_WORDS;
 }
 
 // Generate default sheets on page load
