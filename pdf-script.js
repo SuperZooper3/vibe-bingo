@@ -1,85 +1,92 @@
-// Default word list - can be overridden by custom words
+// 🎯 SINGLE SOURCE OF TRUTH FOR ALL BINGO WORDS
+// This is the ONLY place where the default word list is defined
+// Both the main game and PDF generator pull from the unified localStorage system
 let BINGO_WORDS = [
     "Stack Overflow",
-    "Deadline Panic",
+    "Vibe Coding",
     "Code Review",
     "Merge Conflict",
     "Rubber Duck",
-    "Spaghetti Code",
-    "Technical Debt",
-    "Race Condition",
+    "Your Spaghetti Code",
+    "Tech Debt",
     "Null Pointer",
     "Recursion",
     "Big O Notation",
-    "Refactoring",
-    "Legacy Code",
     "Debugging",
     "Unit Tests",
     "Pair Programming",
-    "Agile Standup",
-    "Git Blame",
+    "Third Standup of the Day",
     "Prod Down",
+    "I Broke Prod",
     "Works On My Machine",
-    "Coffee Break",
     "All Nighter",
     "Imposter Syndrome",
     "Feature Creep",
-    "Documentation",
-    "Scrum Master",
-    "Sprint Planning",
-    "Retrospective",
-    "Hotfix Friday",
+    '"Documentation"',
     "Dependency Hell",
-    "Code Freeze",
     "Memory Leak",
     "Edge Case",
-    "Yak Shaving",
     "Code Monkey",
-    "DevOps Magic",
-    "Container Chaos",
-    "Microservices",
-    "Monolith Monster",
-    "API Gateway",
+    "Fuck Kubernetes",
     "Database Lock",
-    "Caching Layer",
-    "Load Balancer",
-    "Circuit Breaker",
-    "Blue Green Deploy",
+    "AVL Tree",
+    "Observer Pattern",
+    "Generating Series",
     "Rollback Drama",
-    "Docker Whale",
-    "Kubernetes Chaos",
     "Git Rebase",
     "Cherry Pick",
-    "Squash Commits",
-    "Branch Protection",
     "Pull Request",
-    "Code Coverage",
-    "Test Pyramid",
-    "Mocking Framework",
     "Integration Test",
-    "End to End",
-    "Selenium Grid",
-    "Performance Test",
-    "Load Testing",
-    "Stress Testing",
-    "Security Audit",
     "Penetration Test",
-    "Code Smell",
-    "Design Pattern",
-    "Singleton Abuse",
-    "Factory Pattern",
-    "Observer Pattern",
-    "Builder Pattern",
     "Dependency Injection",
-    "Inversion of Control",
-    "SOLID Principles",
-    "Clean Code",
-    "Code Kata",
-    "Pair Debugging",
-    "Mob Programming",
-    "Hotfix Hero",
-    "Regex Wizard",
-    "Caffeine Driven"
+    "SOLID",
+    "Meeting About a Meeting",
+    "Coffee Driven Development",
+    "Works on Localhost",
+    "Push to Main Friday",
+    "No Tests? No Problem",
+    "Magic Number 42",
+    "TODO: Fix This Later",
+    "It's Not a Bug, It's a Feature",
+    "Have You Tried Restarting?",
+    "Microservice Hell",
+    "Ticket Limbo",
+    "Slack Notification PTSD",
+    "Code Review Nitpicking",
+    "Intern Asked Good Question",
+    "We'll Refactor Later",
+    "I use Linux Actually",
+    "Hotfix on Friday 5PM",
+    "Off by One Error",
+    "Segmentation Fault",
+    "Infinite Loop",
+    "Waterloo Works",
+    "Coop Job Rejection",
+    "Resume Padding",
+    "Leetcode Grinding",
+    "System Design Interview",
+    "Whiteboard Anxiety",
+    "Networking Event Small Talk",
+    "LinkedIn Humble Brag",
+    "Startup Ping Pong Table",
+    "Free Pizza Motivation",
+    "Hackathons",
+    "Open Source Contribution",
+    "GitHub Green Squares",
+    "Stackoverflow Reputation",
+    "Vim Exit Tutorial",
+    "Dark Mode Everything",
+    "RGB Keyboard Priorities",
+    "Mechanical Keyboard Noise",
+    "Multiple Monitor Setup",
+    "Merge Conflict Nightmare",
+    "Git Rebase Gone Wrong",
+    "Force Push Main",
+    "Deprecated Library Usage",
+    "Legacy Code Archaeology",
+    "Technical Debt Compound Interest",
+    "Code Review Perfectionism",
+    "Console.log Everywhere",
 ];
 
 class BingoSheetGenerator {
@@ -101,6 +108,8 @@ class BingoSheetGenerator {
     generateUniqueSheet() {
         // Get current word list (default or custom)
         const currentWords = getCurrentWordList();
+        
+        console.log(`🎲 Using ${currentWords.length} words for sheet generation`);
         
         if (currentWords.length < 24) {
             alert(`⚠️ Need at least 24 words to generate bingo sheets! You have ${currentWords.length} words.`);
@@ -375,28 +384,35 @@ function getCurrentWordList() {
 
 function getDefaultWords() {
     return [
-        "Stack Overflow", "Deadline Panic", "Code Review", "Merge Conflict", "Rubber Duck",
-        "Spaghetti Code", "Technical Debt", "Race Condition", "Null Pointer", "Recursion",
-        "Big O Notation", "Refactoring", "Legacy Code", "Debugging", "Unit Tests",
-        "Pair Programming", "Agile Standup", "Git Blame", "Prod Down", "Works On My Machine",
-        "Coffee Break", "All Nighter", "Imposter Syndrome", "Feature Creep", "Documentation",
-        "Scrum Master", "Sprint Planning", "Retrospective", "Hotfix Friday", "Dependency Hell",
-        "Code Freeze", "Memory Leak", "Edge Case", "Yak Shaving", "Code Monkey",
-        "DevOps Magic", "Container Chaos", "Microservices", "Monolith Monster", "API Gateway",
-        "Database Lock", "Caching Layer", "Load Balancer", "Circuit Breaker", "Blue Green Deploy",
-        "Rollback Drama", "Docker Whale", "Kubernetes Chaos", "Git Rebase", "Cherry Pick",
-        "Squash Commits", "Branch Protection", "Pull Request", "Code Coverage", "Test Pyramid",
-        "Mocking Framework", "Integration Test", "End to End", "Selenium Grid", "Performance Test",
-        "Load Testing", "Stress Testing", "Security Audit", "Penetration Test", "Code Smell",
-        "Design Pattern", "Singleton Abuse", "Factory Pattern", "Observer Pattern", "Builder Pattern",
-        "Dependency Injection", "Inversion of Control", "SOLID Principles", "Clean Code", "Code Kata",
-        "Pair Debugging", "Mob Programming", "Hotfix Hero", "Regex Wizard", "Caffeine Driven"
+        "Stack Overflow", "Vibe Coding", "Code Review", "Merge Conflict", "Rubber Duck",
+        "Your Spaghetti Code", "Tech Debt", "Null Pointer", "Recursion", "Big O Notation",
+        "Debugging", "Unit Tests", "Pair Programming", "Third Standup of the Day", "Prod Down",
+        "I Broke Prod", "Works On My Machine", "All Nighter", "Imposter Syndrome", "Feature Creep",
+        '"Documentation"', "Dependency Hell", "Memory Leak", "Edge Case", "Code Monkey",
+        "Fuck Kubernetes", "Database Lock", "AVL Tree", "Observer Pattern", "Generating Series",
+        "Rollback Drama", "Git Rebase", "Cherry Pick", "Pull Request", "Integration Test",
+        "Penetration Test", "Dependency Injection", "SOLID", "Meeting About a Meeting", "Coffee Driven Development",
+        "Works on Localhost", "Push to Main Friday", "No Tests? No Problem", "Magic Number 42", "TODO: Fix This Later",
+        "It's Not a Bug, It's a Feature", "Have You Tried Restarting?", "Microservice Hell", "Ticket Limbo", "Slack Notification PTSD",
+        "Code Review Nitpicking", "Intern Asked Good Question", "We'll Refactor Later", "I use Linux Actually", "Hotfix on Friday 5PM",
+        "Off by One Error", "Segmentation Fault", "Infinite Loop", "Waterloo Works", "Coop Job Rejection",
+        "Resume Padding", "Leetcode Grinding", "System Design Interview", "Whiteboard Anxiety", "Networking Event Small Talk",
+        "LinkedIn Humble Brag", "Startup Ping Pong Table", "Free Pizza Motivation", "Hackathon Energy Drinks", "Open Source Contribution",
+        "GitHub Green Squares", "Stackoverflow Reputation", "Vim Exit Tutorial", "Emacs vs Vim Holy War", "Dark Mode Everything",
+        "RGB Keyboard Priorities", "Mechanical Keyboard Noise", "Multiple Monitor Setup", "Docker Container Confusion", "Kubernetes YAML Hell",
+        "Terraform Infrastructure", "CI/CD Pipeline Broken", "Merge Conflict Nightmare", "Git Rebase Gone Wrong", "Force Push Disaster",
+        "Production Hotfix Panic", "Database Migration Fear", "Cache Invalidation Hell", "Distributed System Chaos", "Microservice Madness",
+        "API Rate Limiting", "OAuth Implementation Pain", "SSL Certificate Expired", "DNS Propagation Delay", "Load Balancer Mystery",
+        "CDN Cache Issues", "Memory Leak Hunt", "CPU Usage Spike", "Database Deadlock", "N+1 Query Problem",
+        "Circular Dependency", "Deprecated Library Usage", "Legacy Code Archaeology", "Technical Debt Compound Interest", "Code Review Perfectionism",
+        "Pair Programming Awkwardness", "Rubber Duck Debugging", "Print Statement Debugging", "Console.log Everywhere", "Debugger Breakpoint Party"
     ];
 }
 
 // Generate default sheets on page load
 document.addEventListener('DOMContentLoaded', () => {
     console.log('📄 Bingo Sheet Generator loaded!');
+    console.log('🎯 This is the SINGLE SOURCE OF TRUTH for all bingo words');
     
     // Set up event listeners
     const customWordsList = document.getElementById('customWordsList');
@@ -412,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auto-generate when settings change
     setupAutoGeneration();
     
-    // Load the unified word list
+    // Load the unified word list (this initializes the system if needed)
     loadSavedWords();
     updateAvailableWordCount();
     

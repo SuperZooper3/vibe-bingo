@@ -1,87 +1,6 @@
-// SE Society Bingo Words - 80 Epic Terms!
-// Note: This will be replaced by saved words if they exist
-let BINGO_WORDS = [
-    "Stack Overflow",
-    "Deadline Panic",
-    "Code Review",
-    "Merge Conflict",
-    "Rubber Duck",
-    "Spaghetti Code",
-    "Technical Debt",
-    "Race Condition",
-    "Null Pointer",
-    "Recursion",
-    "Big O Notation",
-    "Refactoring",
-    "Legacy Code",
-    "Debugging",
-    "Unit Tests",
-    "Pair Programming",
-    "Agile Standup",
-    "Git Blame",
-    "Prod Down",
-    "Works On My Machine",
-    "Coffee Break",
-    "All Nighter",
-    "Imposter Syndrome",
-    "Feature Creep",
-    "Documentation",
-    "Scrum Master",
-    "Sprint Planning",
-    "Retrospective",
-    "Hotfix Friday",
-    "Dependency Hell",
-    "Code Freeze",
-    "Memory Leak",
-    "Edge Case",
-    "Yak Shaving",
-    "Code Monkey",
-    "DevOps Magic",
-    "Container Chaos",
-    "Microservices",
-    "Monolith Monster",
-    "API Gateway",
-    "Database Lock",
-    "Caching Layer",
-    "Load Balancer",
-    "Circuit Breaker",
-    "Blue Green Deploy",
-    "Rollback Drama",
-    "Docker Whale",
-    "Kubernetes Chaos",
-    "Git Rebase",
-    "Cherry Pick",
-    "Squash Commits",
-    "Branch Protection",
-    "Pull Request",
-    "Code Coverage",
-    "Test Pyramid",
-    "Mocking Framework",
-    "Integration Test",
-    "End to End",
-    "Selenium Grid",
-    "Performance Test",
-    "Load Testing",
-    "Stress Testing",
-    "Security Audit",
-    "Penetration Test",
-    "Code Smell",
-    "Design Pattern",
-    "Singleton Abuse",
-    "Factory Pattern",
-    "Observer Pattern",
-    "Builder Pattern",
-    "Dependency Injection",
-    "Inversion of Control",
-    "SOLID Principles",
-    "Clean Code",
-    "Code Kata",
-    "Pair Debugging",
-    "Mob Programming",
-    "Hotfix Hero",
-    "Regex Wizard",
-    "Caffeine Driven"
-];
+// SINGLE SOURCE OF TRUTH: Word list is managed in pdf-script.js
+// This game will ALWAYS pull from the unified localStorage system
+let BINGO_WORDS = []; // Will be populated by loadCustomWords()
 
 class BingoGame {
     constructor() {
@@ -437,62 +356,56 @@ class BingoGame {
     }
     
     loadCustomWords() {
-        console.log('🔄 Loading custom words...');
+        console.log('🔄 Loading words from unified system...');
         
-        // Initialize with default words if no saved list exists
+        // ALWAYS pull from the unified localStorage system
         let savedWords = localStorage.getItem('vibeBingoUnifiedWords');
         
         if (!savedWords) {
-            // First time - save default words
-            const defaultWords = this.getDefaultWords();
-            localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
-            BINGO_WORDS = [...defaultWords]; // Make a copy to avoid reference issues
-            console.log(`📝 Initialized with ${BINGO_WORDS.length} default SE words and saved them for future use!`);
+            // If no saved words exist, that means the PDF generator hasn't been used yet
+            // We'll initialize with a basic fallback, but the user should use the PDF generator
+            console.warn('📝 No unified word list found! Please use the PDF Generator to manage words.');
+            const basicWords = this.getBasicFallbackWords();
+            localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(basicWords));
+            BINGO_WORDS = [...basicWords];
+            console.log(`📝 Initialized with ${BINGO_WORDS.length} basic fallback words.`);
         } else {
             try {
                 const parsedWords = JSON.parse(savedWords);
                 if (parsedWords && Array.isArray(parsedWords) && parsedWords.length >= 25) {
-                    BINGO_WORDS = [...parsedWords]; // Make a copy to avoid reference issues
-                    console.log(`📝 Loaded ${BINGO_WORDS.length} saved custom words for the game!`);
+                    BINGO_WORDS = [...parsedWords];
+                    console.log(`📝 Loaded ${BINGO_WORDS.length} words from unified system!`);
                     console.log(`📝 First few words: ${BINGO_WORDS.slice(0, 5).join(', ')}...`);
                 } else {
-                    // Fallback to defaults if saved words are invalid
-                    console.warn(`📝 Saved words were invalid (${parsedWords ? parsedWords.length : 0} words), resetting to defaults.`);
-                    const defaultWords = this.getDefaultWords();
-                    localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
-                    BINGO_WORDS = [...defaultWords];
-                    console.log(`📝 Reset to ${BINGO_WORDS.length} default words.`);
+                    console.error(`📝 Invalid word list in localStorage (${parsedWords ? parsedWords.length : 0} words)`);
+                    const basicWords = this.getBasicFallbackWords();
+                    BINGO_WORDS = [...basicWords];
+                    console.log(`📝 Using ${BINGO_WORDS.length} fallback words.`);
                 }
             } catch (e) {
-                console.error('📝 Error loading saved words:', e);
-                const defaultWords = this.getDefaultWords();
-                localStorage.setItem('vibeBingoUnifiedWords', JSON.stringify(defaultWords));
-                BINGO_WORDS = [...defaultWords];
-                console.log(`📝 Error recovery: Reset to ${BINGO_WORDS.length} default words.`);
+                console.error('📝 Error parsing saved words:', e);
+                const basicWords = this.getBasicFallbackWords();
+                BINGO_WORDS = [...basicWords];
+                console.log(`📝 Error recovery: Using ${BINGO_WORDS.length} fallback words.`);
             }
         }
         
         console.log(`✅ Word loading complete! Using ${BINGO_WORDS.length} words for the game.`);
     }
     
-    getDefaultWords() {
+    getBasicFallbackWords() {
+        // Basic fallback list - the real word list is managed in the PDF generator
         return [
-            "Stack Overflow", "Deadline Panic", "Code Review", "Merge Conflict", "Rubber Duck",
-            "Spaghetti Code", "Technical Debt", "Race Condition", "Null Pointer", "Recursion",
-            "Big O Notation", "Refactoring", "Legacy Code", "Debugging", "Unit Tests",
-            "Pair Programming", "Agile Standup", "Git Blame", "Prod Down", "Works On My Machine",
-            "Coffee Break", "All Nighter", "Imposter Syndrome", "Feature Creep", "Documentation",
-            "Scrum Master", "Sprint Planning", "Retrospective", "Hotfix Friday", "Dependency Hell",
-            "Code Freeze", "Memory Leak", "Edge Case", "Yak Shaving", "Code Monkey",
-            "DevOps Magic", "Container Chaos", "Microservices", "Monolith Monster", "API Gateway",
-            "Database Lock", "Caching Layer", "Load Balancer", "Circuit Breaker", "Blue Green Deploy",
-            "Rollback Drama", "Docker Whale", "Kubernetes Chaos", "Git Rebase", "Cherry Pick",
-            "Squash Commits", "Branch Protection", "Pull Request", "Code Coverage", "Test Pyramid",
-            "Mocking Framework", "Integration Test", "End to End", "Selenium Grid", "Performance Test",
-            "Load Testing", "Stress Testing", "Security Audit", "Penetration Test", "Code Smell",
-            "Design Pattern", "Singleton Abuse", "Factory Pattern", "Observer Pattern", "Builder Pattern",
-            "Dependency Injection", "Inversion of Control", "SOLID Principles", "Clean Code", "Code Kata",
-            "Pair Debugging", "Mob Programming", "Hotfix Hero", "Regex Wizard", "Caffeine Driven"
+            "Stack Overflow", "Code Review", "Merge Conflict", "Rubber Duck", "Tech Debt",
+            "Null Pointer", "Recursion", "Big O Notation", "Debugging", "Unit Tests",
+            "Pair Programming", "Prod Down", "Works On My Machine", "All Nighter", "Imposter Syndrome",
+            "Feature Creep", "Documentation", "Dependency Hell", "Memory Leak", "Edge Case",
+            "Code Monkey", "Database Lock", "Observer Pattern", "Git Rebase", "Cherry Pick",
+            "Pull Request", "Integration Test", "Dependency Injection", "SOLID", "Meeting About a Meeting",
+            "Coffee Driven Development", "Works on Localhost", "Push to Main Friday", "No Tests? No Problem", "Magic Number 42",
+            "TODO: Fix This Later", "It's Not a Bug, It's a Feature", "Have You Tried Restarting?", "Microservice Hell", "Code Review Nitpicking",
+            "Intern Asked Good Question", "We'll Refactor Later", "Hotfix on Friday 5PM", "Off by One Error", "Segmentation Fault",
+            "Infinite Loop", "Waterloo Works", "Leetcode Grinding", "System Design Interview", "Whiteboard Anxiety"
         ];
     }
 }
