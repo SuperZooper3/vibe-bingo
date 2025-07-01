@@ -91,6 +91,7 @@ class BingoGame {
         
         this.initializeElements();
         this.bindEvents();
+        this.loadCustomWords();
         this.loadGameState();
         this.updateStats();
         this.setupBallAnimation();
@@ -365,8 +366,8 @@ class BingoGame {
         this.stopBallAnimation();
         this.isSpinning = false;
         
-        // Reset all game state
-        this.availableWords = [...BINGO_WORDS];
+        // Reload custom words and reset game state
+        this.loadCustomWords();
         this.calledWords = [];
         this.gameStarted = false;
         
@@ -383,6 +384,33 @@ class BingoGame {
         this.saveGameState();
         
         console.log('🔄 Game reset! Ready for a fresh start.');
+    }
+    
+    loadCustomWords() {
+        // Check if custom words are available and should be used
+        const customWords = localStorage.getItem('vibeBingoCustomWordsForGame');
+        if (customWords) {
+            try {
+                const parsedWords = JSON.parse(customWords);
+                if (parsedWords && parsedWords.length >= 25) {
+                    BINGO_WORDS = parsedWords;
+                    console.log(`📝 Loaded ${parsedWords.length} custom words for the game!`);
+                    
+                    // Reset available words to use custom words
+                    this.availableWords = [...BINGO_WORDS];
+                    
+                    // Update display
+                    this.remaining.textContent = this.availableWords.length;
+                    
+                    return;
+                }
+            } catch (e) {
+                console.error('Error loading custom words:', e);
+            }
+        }
+        
+        // Fallback to default words if no custom words or error
+        console.log('📝 Using default SE words for the game.');
     }
 }
 

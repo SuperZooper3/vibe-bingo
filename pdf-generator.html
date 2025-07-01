@@ -216,6 +216,33 @@
             <h1 style="text-align: center; margin-bottom: 20px;">📄 Bingo Sheet Generator</h1>
             <p style="text-align: center; margin-bottom: 30px;">Generate unique 5x5 bingo sheets for your participants!</p>
             
+            <!-- Custom Words Section -->
+            <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 20px;">
+                <h3 style="text-align: center; margin-bottom: 15px;">🎯 Word List Options</h3>
+                <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 15px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="radio" name="wordSource" value="default" checked onchange="toggleWordSource()">
+                        <span>Use Default SE Words (<span id="defaultWordCount">80</span> words)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="radio" name="wordSource" value="custom" onchange="toggleWordSource()">
+                        <span>Use Custom Words</span>
+                    </label>
+                </div>
+                
+                <div id="customWordsEditor" style="display: none;">
+                    <label for="customWordsList" style="display: block; margin-bottom: 10px; font-weight: 600;">Enter your custom words (one per line, minimum 25 words recommended):</label>
+                    <textarea id="customWordsList" rows="8" style="width: 100%; padding: 10px; border: none; border-radius: 5px; font-family: monospace; font-size: 0.9rem; resize: vertical;" placeholder="Stack Overflow&#10;Technical Debt&#10;Code Review&#10;Merge Conflict&#10;...add more words here"></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <div>
+                            <button type="button" onclick="saveCustomWords()" style="background: linear-gradient(45deg, #4ecdc4, #44a08d); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; margin-right: 10px;">💾 Save Words</button>
+                            <button type="button" onclick="loadCustomWords()" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer;">📂 Load Saved</button>
+                        </div>
+                        <span id="wordCount" style="font-weight: 600;">0 words</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="generate-controls">
                 <div class="control-row">
                     <label for="sheetCount">Number of sheets:</label>
@@ -255,7 +282,8 @@
             <div style="text-align: center; color: rgba(255,255,255,0.8);">
                 <p><strong>Instructions:</strong></p>
                 <ul style="list-style: none; padding: 0;">
-                    <li>• Each sheet will have 24 random words from our 80-word collection + 1 FREE space</li>
+                    <li>• Each sheet will have 24 random words + 1 FREE space</li>
+                    <li>• Choose between default SE words or your own custom list</li>
                     <li>• Monochrome black & white design optimized for printing</li>
                     <li>• Thick borders for clear grid lines</li>
                     <li>• Name field for participants</li>
@@ -267,6 +295,12 @@
         </div>
         
         <div id="sheetsContainer"></div>
+        
+        <div style="text-align: center; margin-top: 30px; color: rgba(255,255,255,0.8);">
+            <h2>🎲 Ready to Generate Bingo Sheets!</h2>
+            <p>Choose your settings above and click "Generate Sheets" to create printable bingo cards.</p>
+            <p>📝 <span id="availableWords">80</span> words available for generation!</p>
+        </div>
     </div>
 
     <script src="pdf-script.js"></script>

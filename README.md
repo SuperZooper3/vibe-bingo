@@ -14,6 +14,7 @@ A fun, modern bingo calling app designed for live events! Perfect for projecting
 - **Event-Ready**: Single-user interface perfect for projection
 
 ### 📄 PDF Sheet Generator
+- **Custom Word Lists**: Use your own words or stick with default SE terms - saves to browser storage
 - **Print-Optimized Sheets**: Monochrome black & white design for clear printing
 - **Thick Grid Lines**: 3px borders for excellent visibility and photocopying
 - **Name Fields**: Built-in space for participants to write their names
@@ -68,6 +69,14 @@ A fun, modern bingo calling app designed for live events! Perfect for projecting
 ## 🛠️ Customization
 
 ### Adding Your Own Words:
+**Easy Way (Recommended):**
+1. Open the PDF Generator page
+2. Select "Use Custom Words" 
+3. Enter your words (one per line, minimum 25 recommended)
+4. Click "💾 Save Words" - this saves them for both sheet generation AND the main game!
+5. Your custom words are saved in your browser and will persist between sessions
+
+**Manual Way (Advanced):**
 Edit the `BINGO_WORDS` array in both `script.js` and `pdf-script.js`:
 
 ```javascript

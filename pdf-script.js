@@ -1,5 +1,5 @@
-// Same word list as the main app - 80 Epic SE Terms!
-const BINGO_WORDS = [
+// Default word list - can be overridden by custom words
+let BINGO_WORDS = [
     "Stack Overflow",
     "Deadline Panic",
     "Code Review",
@@ -99,8 +99,16 @@ class BingoSheetGenerator {
     
     // Generate a randomized 5x5 bingo sheet
     generateUniqueSheet() {
+        // Get current word list (default or custom)
+        const currentWords = getCurrentWordList();
+        
+        if (currentWords.length < 24) {
+            alert(`⚠️ Need at least 24 words to generate bingo sheets! You have ${currentWords.length} words.`);
+            return null;
+        }
+        
         // Get 24 random words (excluding center which will be FREE)
-        const shuffledWords = this.shuffleArray(BINGO_WORDS);
+        const shuffledWords = this.shuffleArray(currentWords);
         const selectedWords = shuffledWords.slice(0, 24);
         
         // Create 5x5 grid with FREE in center
@@ -188,6 +196,10 @@ class BingoSheetGenerator {
             let htmlContent = '';
             for (let i = 1; i <= count; i++) {
                 const sheet = this.generateUniqueSheet();
+                if (!sheet) {
+                    // Error already shown in generateUniqueSheet
+                    return;
+                }
                 htmlContent += this.generateSheetHTML(sheet, i, customization);
             }
             container.innerHTML = htmlContent;
@@ -233,7 +245,7 @@ function generateSheets() {
     }, count > 50 ? 200 : 100);
 }
 
-// Print function with better browser support
+// Simple, reliable print function
 function printSheets() {
     // Check if there are sheets to print
     const sheetsContainer = document.getElementById('sheetsContainer');
@@ -246,88 +258,160 @@ function printSheets() {
     
     console.log(`🖨️ Printing ${sheets.length} sheets...`);
     
-    // Add print-ready class for better styling control
-    document.body.classList.add('print-ready');
+    // Hide the generator panel during printing
+    const generatorPanel = document.querySelector('.generator-panel');
+    const originalDisplay = generatorPanel.style.display;
+    generatorPanel.style.display = 'none';
     
-    try {
-        // Try to open a clean print window
-        const printWindow = window.open('', '_blank', 'width=800,height=600');
-        if (printWindow) {
-            // Create a clean print version
-            const sheetsContent = document.getElementById('sheetsContainer').innerHTML;
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>SE Society Bingo Sheets</title>
-                    <meta charset="UTF-8">
-                    <style>
-                        @page { 
-                            margin: 0.5in; 
-                            size: letter; 
-                        }
-                        body { 
-                            font-family: Arial, sans-serif; 
-                            margin: 0; 
-                            padding: 0; 
-                            background: white;
-                            color: black;
-                        }
-                        .bingo-sheet {
-                            page-break-after: always;
-                            page-break-inside: avoid;
-                            margin-bottom: 20px;
-                        }
-                        .bingo-sheet:last-child {
-                            page-break-after: auto;
-                        }
-                        .bingo-cell {
-                            border: 3px solid #000 !important;
-                            -webkit-print-color-adjust: exact;
-                            print-color-adjust: exact;
-                        }
-                        .bingo-cell.header, .bingo-cell.free, .sheet-header {
-                            background: white !important;
-                            color: black !important;
-                            font-weight: bold !important;
-                            -webkit-print-color-adjust: exact;
-                            print-color-adjust: exact;
-                        }
-                    </style>
-                </head>
-                <body>
-                    ${sheetsContent}
-                </body>
-                </html>
-            `);
-            printWindow.document.close();
-            
-            // Wait a moment for content to load, then print
-            setTimeout(() => {
-                printWindow.print();
-                setTimeout(() => {
-                    printWindow.close();
-                }, 1000);
-            }, 500);
-        } else {
-            throw new Error('Pop-up blocked');
-        }
-    } catch (error) {
-        // Fallback to regular print if pop-up is blocked
-        console.log('Using fallback print method');
-        window.print();
+    // Force clean print styles
+    document.body.style.background = 'white';
+    document.body.style.color = 'black';
+    
+    // Trigger print
+    window.print();
+    
+    // Restore original styles after print dialog closes
+    setTimeout(() => {
+        generatorPanel.style.display = originalDisplay;
+        document.body.style.background = '';
+        document.body.style.color = '';
+    }, 1000);
+}
+
+// Custom word management
+function toggleWordSource() {
+    const customEditor = document.getElementById('customWordsEditor');
+    const useCustom = document.querySelector('input[name="wordSource"]:checked').value === 'custom';
+    
+    customEditor.style.display = useCustom ? 'block' : 'none';
+    
+    if (useCustom) {
+        loadCustomWords();
     }
     
-    // Remove print-ready class after a delay
-    setTimeout(() => {
-        document.body.classList.remove('print-ready');
-    }, 2000);
+    updateAvailableWordCount();
+}
+
+function saveCustomWords() {
+    const customWordsText = document.getElementById('customWordsList').value.trim();
+    if (!customWordsText) {
+        alert('Please enter some words first!');
+        return;
+    }
+    
+    const customWords = customWordsText.split('\n')
+        .map(word => word.trim())
+        .filter(word => word.length > 0);
+    
+    if (customWords.length < 25) {
+        alert('⚠️ You need at least 25 words for bingo sheets to work properly!');
+        return;
+    }
+    
+    localStorage.setItem('vibeBingoCustomWords', JSON.stringify(customWords));
+    
+    // Also save to main game
+    localStorage.setItem('vibeBingoCustomWordsForGame', JSON.stringify(customWords));
+    
+    updateWordCount();
+    updateAvailableWordCount();
+    
+    alert(`✅ Saved ${customWords.length} custom words! These will be used for both sheet generation and the main game.`);
+}
+
+function loadCustomWords() {
+    const savedWords = localStorage.getItem('vibeBingoCustomWords');
+    if (savedWords) {
+        try {
+            const customWords = JSON.parse(savedWords);
+            document.getElementById('customWordsList').value = customWords.join('\n');
+            updateWordCount();
+        } catch (e) {
+            console.error('Error loading saved words:', e);
+        }
+    }
+}
+
+function updateWordCount() {
+    const customWordsText = document.getElementById('customWordsList').value.trim();
+    const wordCount = customWordsText ? customWordsText.split('\n').filter(word => word.trim().length > 0).length : 0;
+    document.getElementById('wordCount').textContent = `${wordCount} words`;
+    
+    const countEl = document.getElementById('wordCount');
+    if (wordCount < 25) {
+        countEl.style.color = '#ff6b6b';
+        countEl.textContent += ' (need at least 25)';
+    } else {
+        countEl.style.color = '#4ecdc4';
+    }
+}
+
+function updateAvailableWordCount() {
+    const useCustom = document.querySelector('input[name="wordSource"]:checked').value === 'custom';
+    let wordCount;
+    
+    if (useCustom) {
+        const customWordsText = document.getElementById('customWordsList').value.trim();
+        wordCount = customWordsText ? customWordsText.split('\n').filter(word => word.trim().length > 0).length : 0;
+    } else {
+        wordCount = getDefaultWords().length;
+    }
+    
+    document.getElementById('availableWords').textContent = wordCount;
+}
+
+function getCurrentWordList() {
+    const useCustom = document.querySelector('input[name="wordSource"]:checked').value === 'custom';
+    
+    if (useCustom) {
+        const customWordsText = document.getElementById('customWordsList').value.trim();
+        if (customWordsText) {
+            return customWordsText.split('\n')
+                .map(word => word.trim())
+                .filter(word => word.length > 0);
+        }
+    }
+    
+    return getDefaultWords();
+}
+
+function getDefaultWords() {
+    return [
+        "Stack Overflow", "Deadline Panic", "Code Review", "Merge Conflict", "Rubber Duck",
+        "Spaghetti Code", "Technical Debt", "Race Condition", "Null Pointer", "Recursion",
+        "Big O Notation", "Refactoring", "Legacy Code", "Debugging", "Unit Tests",
+        "Pair Programming", "Agile Standup", "Git Blame", "Prod Down", "Works On My Machine",
+        "Coffee Break", "All Nighter", "Imposter Syndrome", "Feature Creep", "Documentation",
+        "Scrum Master", "Sprint Planning", "Retrospective", "Hotfix Friday", "Dependency Hell",
+        "Code Freeze", "Memory Leak", "Edge Case", "Yak Shaving", "Code Monkey",
+        "DevOps Magic", "Container Chaos", "Microservices", "Monolith Monster", "API Gateway",
+        "Database Lock", "Caching Layer", "Load Balancer", "Circuit Breaker", "Blue Green Deploy",
+        "Rollback Drama", "Docker Whale", "Kubernetes Chaos", "Git Rebase", "Cherry Pick",
+        "Squash Commits", "Branch Protection", "Pull Request", "Code Coverage", "Test Pyramid",
+        "Mocking Framework", "Integration Test", "End to End", "Selenium Grid", "Performance Test",
+        "Load Testing", "Stress Testing", "Security Audit", "Penetration Test", "Code Smell",
+        "Design Pattern", "Singleton Abuse", "Factory Pattern", "Observer Pattern", "Builder Pattern",
+        "Dependency Injection", "Inversion of Control", "SOLID Principles", "Clean Code", "Code Kata",
+        "Pair Debugging", "Mob Programming", "Hotfix Hero", "Regex Wizard", "Caffeine Driven"
+    ];
 }
 
 // Generate default sheets on page load
 document.addEventListener('DOMContentLoaded', () => {
     console.log('📄 Bingo Sheet Generator loaded!');
-    console.log(`📝 ${BINGO_WORDS.length} words available for sheet generation`);
+    
+    // Set up event listeners
+    const customWordsList = document.getElementById('customWordsList');
+    if (customWordsList) {
+        customWordsList.addEventListener('input', updateWordCount);
+    }
+    
+    // Load any saved custom words
+    loadCustomWords();
+    updateAvailableWordCount();
+    
+    // Initialize default word count display
+    document.getElementById('defaultWordCount').textContent = getDefaultWords().length;
     
     // Start with empty container - let user generate sheets as needed
     const container = document.getElementById('sheetsContainer');
@@ -335,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="text-align: center; color: white; padding: 40px;">
             <h3>🎲 Ready to Generate Bingo Sheets!</h3>
             <p>Choose your settings above and click "Generate Sheets" to create printable bingo cards.</p>
-            <p>📝 ${BINGO_WORDS.length} SE-themed words available!</p>
+            <p>📝 <span id="currentWordCount">${getDefaultWords().length}</span> words ready for generation!</p>
         </div>
     `;
 }); 
