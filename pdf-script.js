@@ -237,14 +237,6 @@ function generateSheets() {
     };
     
     sheetGenerator.generateMultipleSheets(count, customization);
-    
-    // Smooth scroll to first sheet
-    setTimeout(() => {
-        const firstSheet = document.querySelector('.bingo-sheet');
-        if (firstSheet) {
-            firstSheet.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, count > 50 ? 200 : 100);
 }
 
 // Simple, reliable print function
