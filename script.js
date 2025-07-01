@@ -210,14 +210,43 @@ class BingoGame {
             return;
         }
         
-        // Show most recent first
-        const recentWords = [...this.calledWords].reverse();
-        this.calledWordsContainer.innerHTML = recentWords.map(item => `
-            <div class="word-item">
-                <span>${item.word}</span>
-                <span class="word-number">#${item.number}</span>
-            </div>
-        `).join('');
+        // Check if this is the first word or if we're loading saved state
+        const existingItems = this.calledWordsContainer.querySelectorAll('.word-item');
+        const isFirstLoad = existingItems.length === 0 || this.calledWords.length !== existingItems.length;
+        
+        if (isFirstLoad) {
+            // Full rebuild for initial load or state restoration
+            const recentWords = [...this.calledWords].reverse();
+            this.calledWordsContainer.innerHTML = recentWords.map(item => `
+                <div class="word-item">
+                    <span>${item.word}</span>
+                    <span class="word-number">#${item.number}</span>
+                </div>
+            `).join('');
+        } else {
+            // Smooth insertion of new word at top
+            const latestWord = this.calledWords[this.calledWords.length - 1];
+            const newWordElement = document.createElement('div');
+            newWordElement.className = 'word-item new-word';
+            newWordElement.innerHTML = `
+                <span>${latestWord.word}</span>
+                <span class="word-number">#${latestWord.number}</span>
+            `;
+            
+            // Remove "no words" message if it exists
+            const noWordsMsg = this.calledWordsContainer.querySelector('.no-words');
+            if (noWordsMsg) {
+                noWordsMsg.remove();
+            }
+            
+            // Insert at the top
+            this.calledWordsContainer.insertBefore(newWordElement, this.calledWordsContainer.firstChild);
+            
+            // Trigger animation after a brief delay for smooth insertion
+            requestAnimationFrame(() => {
+                newWordElement.classList.remove('new-word');
+            });
+        }
     }
     
     updateStats() {
@@ -228,11 +257,11 @@ class BingoGame {
     setupBallAnimation() {
         // Create multiple animated bouncing balls inside spinner
         this.balls = [];
-        this.ballCount = 8; // Reduced for better visibility and less chaos
+        this.ballCount = 15; // More balls for authentic bingo tumbler feel
         
         for (let i = 0; i < this.ballCount; i++) {
             const ball = document.createElement('div');
-            ball.className = `bouncing-ball ball-${(i % 8) + 1}`; // Cycle through colors
+            ball.className = `bouncing-ball ball-${(i % 18) + 1}`; // Cycle through colors
             this.spinner.appendChild(ball);
             
             // Each ball has different properties for varied animation
@@ -245,7 +274,9 @@ class BingoGame {
                 y: 50 + Math.random() * Math.max(100, maxPos - 100),
                 velocityX: (Math.random() - 0.5) * 12, // Faster speeds!
                 velocityY: (Math.random() - 0.5) * 12,
-                size: 20 + Math.random() * 10 // Varied sizes for more chaos
+                size: 20 + Math.random() * 10, // Varied sizes for more chaos
+                rotation: Math.random() * 360, // Initial rotation
+                rotationSpeed: (Math.random() - 0.5) * 8 // Spin speed
             });
         }
         
@@ -270,22 +301,30 @@ class BingoGame {
                     ball.x = Math.max(ball.size, Math.min(containerSize - ball.size, ball.x));
                     // Add explosion effect on wall hit
                     ball.velocityY += (Math.random() - 0.5) * 3;
+                    // Change spin direction on bounce
+                    ball.rotationSpeed *= -0.8;
                 }
                 if (ball.y <= ball.size || ball.y >= containerSize - ball.size) {
                     ball.velocityY *= -0.98;
                     ball.y = Math.max(ball.size, Math.min(containerSize - ball.size, ball.y));
                     // Add explosion effect on wall hit
                     ball.velocityX += (Math.random() - 0.5) * 3;
+                    // Change spin direction on bounce
+                    ball.rotationSpeed *= -0.8;
                 }
                 
                 // Apply gravity effect
                 ball.velocityY += 0.15;
                 
-                // Apply position and size
+                // Update rotation for spinning effect
+                ball.rotation += ball.rotationSpeed;
+                
+                // Apply position, size, and rotation
                 ball.element.style.left = `${ball.x - ball.size/2}px`;
                 ball.element.style.top = `${ball.y - ball.size/2}px`;
                 ball.element.style.width = `${ball.size}px`;
                 ball.element.style.height = `${ball.size}px`;
+                ball.element.style.transform = `rotate(${ball.rotation}deg)`;
                 
                 // Add MORE random motion for chaos!
                 if (Math.random() < 0.01) {
@@ -297,6 +336,8 @@ class BingoGame {
                 if (Math.random() < 0.003) {
                     ball.velocityX *= -0.8;
                     ball.velocityY *= -0.8;
+                    // Random spin direction changes
+                    ball.rotationSpeed += (Math.random() - 0.5) * 4;
                 }
             });
             
